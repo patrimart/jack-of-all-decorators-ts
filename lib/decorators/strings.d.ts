@@ -1,0 +1,12 @@
+export declare function cast(caster: (v: string) => any): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>) => void;
+export declare function escape(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>): void;
+export declare function pad(len: number, chars?: string): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>) => void;
+export declare function repeat(n: number): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>) => void;
+export declare function truncate(length: number, omission?: string, separator?: RegExp | string): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>) => void;
+export declare function trim(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>): void;
+export declare function camelCase(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>): void;
+export declare function kebabCase(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>): void;
+export declare function snakeCase(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>): void;
+export declare function startCase(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>): void;
+export declare function titleCase(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>): void;
+export declare function words(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>): void;

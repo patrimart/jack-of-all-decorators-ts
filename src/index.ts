@@ -30,7 +30,11 @@ export namespace Json {
     export const serializeParam    = jsonablesAnnotations.serializeParam;
 }
 
-import { defensiveCopy, memoize } from "./decorators/functions";
+import { defensiveCopy, debounce, defer, delay, memoize, throttle, tryCatch } from "./decorators/functions";
+import {
+    cast, escape, pad, repeat, truncate, trim,
+    camelCase, kebabCase, snakeCase, startCase, titleCase, words
+} from "./decorators/strings";
 import {
     difference, differenceWith,
     filterTruthy, flatten, fromTuples, intersection, intersectionWith, mean, reverse,
@@ -42,9 +46,24 @@ import {
  * Note: decorators are executed in reverse order. Think of the decorators as being added to a stack.
  */
 export {
+    // Function
     defensiveCopy,
+    delay,
+    debounce,
+    defer,
     memoize,
-
+    throttle,
+    tryCatch,
+    // String
+    cast,
+    escape,
+    pad,
+    repeat,
+    truncate,
+    trim,
+    camelCase, kebabCase, snakeCase, startCase, titleCase,
+    words,
+    // Array
     difference, differenceWith,
     filterTruthy,
     flatten,

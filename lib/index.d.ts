@@ -20,6 +20,7 @@ export declare namespace Json {
     const serializeMethod: typeof jsonablesAnnotations.serializeMethod;
     const serializeParam: typeof jsonablesAnnotations.serializeParam;
 }
-import { defensiveCopy, memoize } from "./decorators/functions";
+import { defensiveCopy, debounce, defer, delay, memoize, throttle, tryCatch } from "./decorators/functions";
+import { cast, escape, pad, repeat, truncate, trim, camelCase, kebabCase, snakeCase, startCase, titleCase, words } from "./decorators/strings";
 import { difference, differenceWith, filterTruthy, flatten, fromTuples, intersection, intersectionWith, mean, reverse, shuffle, sort, sum, takeWhile, union, unionWith, unique, uniqueWith, unzip, zip, xor, xorWith } from "./decorators/arrays";
-export { defensiveCopy, memoize, difference, differenceWith, filterTruthy, flatten, fromTuples, intersection, intersectionWith, mean, reverse, shuffle, sort, sum, takeWhile, union, unionWith, unique, uniqueWith, unzip, zip, xor, xorWith };
+export { defensiveCopy, delay, debounce, defer, memoize, throttle, tryCatch, cast, escape, pad, repeat, truncate, trim, camelCase, kebabCase, snakeCase, startCase, titleCase, words, difference, differenceWith, filterTruthy, flatten, fromTuples, intersection, intersectionWith, mean, reverse, shuffle, sort, sum, takeWhile, union, unionWith, unique, uniqueWith, unzip, zip, xor, xorWith };

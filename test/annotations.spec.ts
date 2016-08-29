@@ -1,6 +1,6 @@
 
 import {
-    defensiveCopy, memoize, mean, sum,
+    defensiveCopy, delay, memoize, tryCatch, mean, sum,
     difference, differenceWith, xor, xorWith,
     filterTruthy, flatten, fromTuples, intersection, unique, uniqueWith, reverse, shuffle, sort, takeWhile, union, unionWith, unzip, zip
 } from "../lib";
@@ -20,7 +20,11 @@ class MyClass {
         return this.foo;
     }
 
-    @xor
+    @delay(5000)
+    public print (message: string) {
+        console.log("print() =>", message);
+    }
+
     public getArray () {
         return [[1, 3, 4, 5], [4, 5, 6, 7]]; // [4, "", 7, 3, null, 8, 7, 0, 1, 1, 5, undefined, 7, 3, 78];
     }
@@ -40,6 +44,7 @@ class MyClass {
 let c = new MyClass("foo");
 console.log("getFoo() =>", c.getFoo());
 c.setFoo("bar");
+c.print("HELLO");
 console.log("getFoo() =>", c.getFoo());
 console.log("getArray() =>", c.getArray());
 console.log("arr =>", c.arr);

@@ -1,6 +1,28 @@
 
-import { cloneDeep } from "lodash";
-import { methodFactory } from "./factories";
+import { cloneDeep, debounce, defer, delay, throttle } from "lodash";
+import { methodFactory, methodFactoryBind } from "./factories";
+
+
+
+export function debounce<T> (maxWait: number, leading = true, trailing = ! leading, wait = 0) {
+
+    return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
+        return methodFactoryBind<any>((func: Function) => debounce.call(debounce, func, { maxWait, leading, trailing, wait }), descriptor);
+    }
+}
+
+
+export function defer (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
+    return methodFactoryBind<any>((func: Function) => defer.call(defer, func), descriptor);
+}
+
+
+export function delay (wait: number) {
+
+    return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
+        return methodFactoryBind<any>((func: Function) => delay.call(delay, func, wait), descriptor);
+    }
+}
 
 
 /**
@@ -15,4 +37,31 @@ export function defensiveCopy (target: any, propertyKey: string, descriptor: Typ
 export function memoize (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) {
     const memKey = Symbol(propertyKey);
     return methodFactory (function (v: any) { return this[memKey] = this[memKey] || v; }, descriptor);
+}
+
+
+export function throttle (wait: number, leading = true, trailing = ! leading) {
+
+    return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
+        return methodFactoryBind<any>((func: Function) => throttle.call(throttle, func, { leading, trailing, wait }), descriptor);
+    }
+}
+
+
+export function tryCatch (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) {
+
+    const func = function (f: () => any) {
+        return function (...a: any[]) {
+            try {
+                return f.apply(this, a);
+            } catch (err) {
+                console.error(`An error occurred on property "${propertyKey}".`, err, err.stack);
+                return undefined;
+            }
+        }
+    };
+
+    if (!! descriptor.value)    descriptor.value = func(descriptor.value as any) as any;
+    else if (!! descriptor.get) descriptor.get   = func(descriptor.get);
+    else                        throw new TypeError("Only put a decorator on a method or get accessor.");
 }
