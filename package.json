@@ -1,0 +1,21 @@
+{
+  "name": "annotations",
+  "version": "1.0.0",
+  "description": "Annotation library for TypeScript.",
+  "main": "./lib/index.js",
+  "scripts": {
+    "compile-lib": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "mocha": "^2.5.3",
+    "typescript": "^1.8.10",
+    "typings": "^1.3.2"
+  },
+  "author": "Patrick Martin",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.15.0",
+    "reflect-metadata": "^0.1.8"
+  }
+}
