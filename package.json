@@ -15,6 +15,7 @@
   "author": "Patrick Martin",
   "license": "ISC",
   "dependencies": {
+    "dateformat": "^1.0.12",
     "lodash": "^4.15.0",
     "reflect-metadata": "^0.1.8"
   }

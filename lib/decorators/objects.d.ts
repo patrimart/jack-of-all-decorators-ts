@@ -1,0 +1,10 @@
+export declare function at(paths: string | string[]): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => Object> | TypedPropertyDescriptor<Object>) => void;
+export declare function defaults(...sources: Object[]): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => Object> | TypedPropertyDescriptor<Object>) => void;
+export declare function extend(...sources: Object[]): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => Object> | TypedPropertyDescriptor<Object>) => void;
+export declare function includes<T extends any[] | Object | string>(searchValue: any, offset?: number): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<T>) => void;
+export declare function mapKeys(mapper: (value: any, key: string) => string): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => Object> | TypedPropertyDescriptor<Object>) => void;
+export declare function mapValues(mapper: (value: any) => any): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => Object> | TypedPropertyDescriptor<Object>) => void;
+export declare function omit(predicate: string | string[] | ((value: any, key: string) => boolean)): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => Object> | TypedPropertyDescriptor<Object>) => void;
+export declare function orderBy<T>(iteratees: string, orders?: string): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => T[]> | TypedPropertyDescriptor<T[]>) => void;
+export declare function toTuples(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => Object> | TypedPropertyDescriptor<Object>): void;
+export declare function toValues(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => Object> | TypedPropertyDescriptor<Object>): void;

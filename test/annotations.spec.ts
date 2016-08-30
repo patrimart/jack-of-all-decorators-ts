@@ -1,8 +1,10 @@
 
 import {
-    defensiveCopy, delay, memoize, tryCatch, mean, sum,
+    dateFormat,
+    defensiveCopy, delay, defer, memoize, tryCatch, mean, sum,
     difference, differenceWith, xor, xorWith,
-    filterTruthy, flatten, fromTuples, intersection, unique, uniqueWith, reverse, shuffle, sort, takeWhile, union, unionWith, unzip, zip
+    filterTruthy, flatten, fromTuples, intersection, unique, uniqueWith,
+    reverse, shuffle, sort, takeWhile, union, unionWith, unzip, zip
 } from "../lib";
 
 class MyClass {
@@ -20,9 +22,9 @@ class MyClass {
         return this.foo;
     }
 
-    @delay(5000)
-    public print (message: string) {
-        console.log("print() =>", message);
+    @dateFormat("fullDate")
+    public print () {
+        return new Date();
     }
 
     public getArray () {
@@ -44,7 +46,7 @@ class MyClass {
 let c = new MyClass("foo");
 console.log("getFoo() =>", c.getFoo());
 c.setFoo("bar");
-c.print("HELLO");
+console.log("DATE", c.print());
 console.log("getFoo() =>", c.getFoo());
 console.log("getArray() =>", c.getArray());
 console.log("arr =>", c.arr);

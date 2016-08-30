@@ -1,5 +1,5 @@
 
-import { cloneDeep, debounce, defer, delay, throttle } from "lodash";
+import { cloneDeep, curry, debounce, defer, delay, throttle } from "lodash";
 import { methodFactory, methodFactoryBind } from "./factories";
 
 
@@ -9,6 +9,11 @@ export function debounce<T> (maxWait: number, leading = true, trailing = ! leadi
     return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
         return methodFactoryBind<any>((func: Function) => debounce.call(debounce, func, { maxWait, leading, trailing, wait }), descriptor);
     }
+}
+
+
+export function curry (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
+    return methodFactoryBind<any>((func: Function) => curry.call(curry, func), descriptor);
 }
 
 
@@ -37,6 +42,18 @@ export function defensiveCopy (target: any, propertyKey: string, descriptor: Typ
 export function memoize (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) {
     const memKey = Symbol(propertyKey);
     return methodFactory (function (v: any) { return this[memKey] = this[memKey] || v; }, descriptor);
+}
+
+/**
+ * Partial is odd in that it must be invoked like c.method()(3).
+ * @param args
+ */
+export function partial (...args: any[]) {
+
+    return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
+        // Using curry to achieve c.method(3), where partial is forcing c.method()(3)
+        return methodFactoryBind<any>((func: Function) => curry.call(curry, func)(...args), descriptor);
+    }
 }
 
 

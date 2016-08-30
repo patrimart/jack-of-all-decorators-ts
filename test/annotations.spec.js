@@ -19,8 +19,8 @@ var MyClass = (function () {
     MyClass.prototype.getFoo = function () {
         return this.foo;
     };
-    MyClass.prototype.print = function (message) {
-        console.log("print() =>", message);
+    MyClass.prototype.print = function () {
+        return new Date();
     };
     MyClass.prototype.getArray = function () {
         return [[1, 3, 4, 5], [4, 5, 6, 7]]; // [4, "", 7, 3, null, 8, 7, 0, 1, 1, 5, undefined, 7, 3, 78];
@@ -45,9 +45,9 @@ var MyClass = (function () {
         __metadata('design:returntype', void 0)
     ], MyClass.prototype, "getFoo", null);
     __decorate([
-        lib_1.delay(5000), 
+        lib_1.dateFormat("fullDate"), 
         __metadata('design:type', Function), 
-        __metadata('design:paramtypes', [String]), 
+        __metadata('design:paramtypes', []), 
         __metadata('design:returntype', void 0)
     ], MyClass.prototype, "print", null);
     __decorate([
@@ -59,7 +59,7 @@ var MyClass = (function () {
 var c = new MyClass("foo");
 console.log("getFoo() =>", c.getFoo());
 c.setFoo("bar");
-c.print("HELLO");
+console.log("DATE", c.print());
 console.log("getFoo() =>", c.getFoo());
 console.log("getArray() =>", c.getArray());
 console.log("arr =>", c.arr);

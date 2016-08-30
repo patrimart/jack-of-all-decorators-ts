@@ -2,7 +2,7 @@
 import { methodFactory } from "./factories";
 import {
     compact, difference, differenceWith, flattenDeep, fromPairs, intersection, intersectionWith, mean,
-    reverse, shuffle, sortBy, sum, takeWhile, union, unionWith, uniq, uniqWith, xor, xorWith, unzip, zip
+    reverse, sample, shuffle, sortBy, sum, takeWhile, union, unionWith, uniq, uniqWith, xor, xorWith, unzip, zip
 } from "lodash";
 
 
@@ -47,6 +47,17 @@ export function intersectionWith<T> (equality?: (a: T, b: T) => boolean) {
     }
 }
 
+/**
+ * c.getArray().next().value
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols
+ * @param target
+ * @param propertyKey
+ * @param descriptor
+ */
+export function iterator<T> (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => T[]> | TypedPropertyDescriptor<T[]>) {
+    return methodFactory<any> ((arr: any[]) => arr[Symbol.iterator](), descriptor);
+}
+
 
 export function mean<T> (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => T[]> | TypedPropertyDescriptor<T[]>) {
     return methodFactory<any> (mean.bind(mean), descriptor);
@@ -58,13 +69,18 @@ export function reverse<T> (target: any, propertyKey: string, descriptor: TypedP
 }
 
 
-export function sort<T> (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => T[]> | TypedPropertyDescriptor<T[]>) {
-    return methodFactory<any> (sortBy.bind(sortBy), descriptor);
+export function sample<T> (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => T[]> | TypedPropertyDescriptor<T[]>) {
+    return methodFactory<any> (sample.bind(sample), descriptor);
 }
 
 
 export function shuffle<T> (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => T[]> | TypedPropertyDescriptor<T[]>) {
     return methodFactory<any> (shuffle.bind(shuffle), descriptor);
+}
+
+
+export function sort<T> (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => T[]> | TypedPropertyDescriptor<T[]>) {
+    return methodFactory<any> (sortBy.bind(sortBy), descriptor);
 }
 
 
