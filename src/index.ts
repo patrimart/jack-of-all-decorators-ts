@@ -1,6 +1,6 @@
 
 import * as jsonablesInterfaces         from "./jsonables/interfaces";
-import * as jsonablesTransformersBasics from "./jsonables/transformers/basics";
+import * as jsonablesTransformers from "./jsonables/transformers";
 import * as jsonablesSerializer         from "./jsonables/Serializer";
 import * as jsonablesAnnotations        from "./jsonables/annotations";
 
@@ -14,13 +14,13 @@ export namespace Json {
     export type ITransformer<T, U>         = jsonablesInterfaces.ITransformer<T, U>;
 
     export const transformers = {
-        DefaultValue  : jsonablesTransformersBasics.DefaultValue,
-        OverrideValue : jsonablesTransformersBasics.OverrideValue,
-        NotNullable   : jsonablesTransformersBasics.NotNullable,
-        IsRequired    : jsonablesTransformersBasics.IsRequired,
-        ToBoolean     : jsonablesTransformersBasics.ToBoolean,
-        ToString      : jsonablesTransformersBasics.ToString,
-        ToNumber      : jsonablesTransformersBasics.ToNumber,
+        DefaultValue  : jsonablesTransformers.DefaultValue,
+        OverrideValue : jsonablesTransformers.OverrideValue,
+        NotNullable   : jsonablesTransformers.NotNullable,
+        IsRequired    : jsonablesTransformers.IsRequired,
+        ToBoolean     : jsonablesTransformers.ToBoolean,
+        ToString      : jsonablesTransformers.ToString,
+        ToNumber      : jsonablesTransformers.ToNumber,
     };
 
     export const Serializer        = jsonablesSerializer.Serializer;
@@ -30,14 +30,17 @@ export namespace Json {
     export const serializeParam    = jsonablesAnnotations.serializeParam;
 }
 
-import { curry, defensiveCopy, debounce, defer, delay, memoize, partial, throttle, tryCatch } from "./decorators/functions";
+import {
+    curry, defensiveCopy, debounce, defer, delay, iterable, lazy,
+    memoize, partial, rearg, throttle, tryCatch
+} from "./decorators/functions";
 import {
     cast, escape, pad, repeat, truncate, trim,
     camelCase, kebabCase, snakeCase, startCase, titleCase, words
 } from "./decorators/strings";
 import {
-    difference, differenceWith, iterator,
-    filterTruthy, flatten, fromTuples, intersection, intersectionWith, mean, reverse,
+    difference, differenceWith,
+    filterTruthy, flatten, fromTuples, intersection, intersectionWith, iterator, mean, reverse,
     sample, shuffle, sort, sum, takeWhile, union, unionWith, unique, uniqueWith, unzip, zip,
     xor, xorWith
 } from "./decorators/arrays";
@@ -57,8 +60,11 @@ export {
     delay,
     debounce,
     defer,
+    iterable,
+    lazy,
     memoize,
     partial,
+    rearg,
     throttle,
     tryCatch,
     // String

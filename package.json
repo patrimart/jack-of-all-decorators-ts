@@ -1,6 +1,6 @@
 {
-  "name": "annotations",
-  "version": "1.0.0",
+  "name": "jack-of-all-decorators",
+  "version": "1.0.0-beta1",
   "description": "Annotation library for TypeScript.",
   "main": "./lib/index.js",
   "scripts": {

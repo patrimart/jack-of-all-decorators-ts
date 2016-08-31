@@ -20,9 +20,9 @@ export declare namespace Json {
     const serializeMethod: typeof jsonablesAnnotations.serializeMethod;
     const serializeParam: typeof jsonablesAnnotations.serializeParam;
 }
-import { curry, defensiveCopy, debounce, defer, delay, memoize, partial, throttle, tryCatch } from "./decorators/functions";
+import { curry, defensiveCopy, debounce, defer, delay, iterable, lazy, memoize, partial, rearg, throttle, tryCatch } from "./decorators/functions";
 import { cast, escape, pad, repeat, truncate, trim, camelCase, kebabCase, snakeCase, startCase, titleCase, words } from "./decorators/strings";
-import { difference, differenceWith, iterator, filterTruthy, flatten, fromTuples, intersection, intersectionWith, mean, reverse, sample, shuffle, sort, sum, takeWhile, union, unionWith, unique, uniqueWith, unzip, zip, xor, xorWith } from "./decorators/arrays";
+import { difference, differenceWith, filterTruthy, flatten, fromTuples, intersection, intersectionWith, iterator, mean, reverse, sample, shuffle, sort, sum, takeWhile, union, unionWith, unique, uniqueWith, unzip, zip, xor, xorWith } from "./decorators/arrays";
 import { at, defaults, extend, includes, mapKeys, mapValues, omit, orderBy, toTuples, toValues } from "./decorators/objects";
 import { dateFormat } from "./decorators/dates";
-export { curry, defensiveCopy, delay, debounce, defer, memoize, partial, throttle, tryCatch, cast, escape, pad, repeat, truncate, trim, camelCase, kebabCase, snakeCase, startCase, titleCase, words, difference, differenceWith, filterTruthy, flatten, fromTuples, intersection, intersectionWith, iterator, mean, reverse, sample, shuffle, sort, sum, takeWhile, union, unionWith, unique, uniqueWith, unzip, zip, xor, xorWith, at, defaults, extend, includes, mapKeys, mapValues, omit, orderBy, toTuples, toValues, dateFormat };
+export { curry, defensiveCopy, delay, debounce, defer, iterable, lazy, memoize, partial, rearg, throttle, tryCatch, cast, escape, pad, repeat, truncate, trim, camelCase, kebabCase, snakeCase, startCase, titleCase, words, difference, differenceWith, filterTruthy, flatten, fromTuples, intersection, intersectionWith, iterator, mean, reverse, sample, shuffle, sort, sum, takeWhile, union, unionWith, unique, uniqueWith, unzip, zip, xor, xorWith, at, defaults, extend, includes, mapKeys, mapValues, omit, orderBy, toTuples, toValues, dateFormat };

@@ -1,6 +1,6 @@
 
 import { isEmpty } from "lodash";
-import { ITransformerResponse } from "../interfaces";
+import { ITransformerResponse } from "./interfaces";
 
 /**
  * If a value is undefined, the given default value is returned.

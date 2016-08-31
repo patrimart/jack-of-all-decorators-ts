@@ -6,7 +6,8 @@ class MyClass {
 
     constructor (
         private foo: string,
-        @Json.serializeParam() public arg: string = "default"
+        @Json.serializeParam() public arg: string = "default",
+        private _class?: MyClass
     ) {}
 
     @Json.serializeProperty("barbar", Json.transformers.OverrideValue("999"))
@@ -17,11 +18,15 @@ class MyClass {
         return this.foo;
     }
 
+    @Json.serializeMethod()
+    public getClass () {
+        return this._class;
+    }
 }
 
 let c = new MyClass(undefined);
 c.bar = "9876";
-let d = new MyClass("bar");
+let d = new MyClass("bar", "arguments", new MyClass("foobar"));
 d.arg = "newDefault";
 
 console.log("JSON =>", JSON.stringify((c as any).toJSON()));

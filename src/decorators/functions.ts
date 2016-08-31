@@ -1,5 +1,5 @@
 
-import { cloneDeep, curry, debounce, defer, delay, throttle } from "lodash";
+import { cloneDeep, curry, debounce, defer, delay, rearg, throttle } from "lodash";
 import { methodFactory, methodFactoryBind } from "./factories";
 
 
@@ -38,16 +38,35 @@ export function defensiveCopy (target: any, propertyKey: string, descriptor: Typ
     return methodFactory (cloneDeep.bind(cloneDeep), descriptor);
 }
 
+/**
+ * Requires target ES6 to work with for...of and [...it]. ES5 works with Array.from() or it.next().
+ * @param {number} [limit=Number.MAX_SAFE_INTEGER] - limit of iterations.
+ */
+export function iterable (limit = Number.MAX_SAFE_INTEGER) {
+
+    return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
+        return methodFactoryBind<any>((func: Function) => ({
+            next () { return { value: limit > 0 ? func.call(func) : undefined, done: limit-- <= 0 }; },
+            [Symbol.iterator] () { return this; }
+        }), descriptor);
+    }
+}
+
+
+export function lazy (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
+    return methodFactoryBind<any>(function (func: Function) {
+        let cache: any;
+        return () => cache || (cache = func.call(func));
+    }, descriptor);
+}
+
 
 export function memoize (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) {
     const memKey = Symbol(propertyKey);
     return methodFactory (function (v: any) { return this[memKey] = this[memKey] || v; }, descriptor);
 }
 
-/**
- * Partial is odd in that it must be invoked like c.method()(3).
- * @param args
- */
+
 export function partial (...args: any[]) {
 
     return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
@@ -56,6 +75,13 @@ export function partial (...args: any[]) {
     }
 }
 
+
+export function rearg (...indexes: number[]) {
+
+    return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
+        return methodFactoryBind<any>((func: Function) => rearg.call(rearg, func, indexes), descriptor);
+    }
+}
 
 export function throttle (wait: number, leading = true, trailing = ! leading) {
 
