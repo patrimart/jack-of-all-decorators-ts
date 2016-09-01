@@ -1,11 +1,17 @@
 
 import {
-    curry, partial, iterator, iterable, lazy,
+    curry, partial, iterator, iterable, lazy, setterGetter, repeat, padLeft,
     at, extend, includes, mapKeys, mapValues, omit, orderBy,
     toTuples, toValues,
 } from "../lib";
 
 class MyClass {
+
+    @setterGetter(
+        repeat(2),
+        padLeft(10)
+    )
+    public prop = "initial";
 
     constructor (
         private foo: string
@@ -47,6 +53,11 @@ class MyClass {
 }
 
 let c = new MyClass("foo");
+console.log(c.prop);
+c.prop = "changed";
+console.log(c.prop);
+
+
 console.log("getArray() =>", c.getArray());
 // for (let a of c.getArray()) {
 //     console.log("IT =>", a);
@@ -55,7 +66,7 @@ console.log("getObject() =>", c.getObj());
 console.log("getArrayOfObjects() =>", c.getArrayOfObjects());
 const v = c.add(4, 5, 6);
 console.log("add() =>", v());
-let it = c.getRandom();
-for (let i of it) {
-    console.log(i);
-}
+// let it = c.getRandom();
+// for (let i of it) {
+//     console.log(i);
+// }

@@ -1,6 +1,8 @@
 export declare function cast(caster: (v: string) => any): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>) => void;
 export declare function escape(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>): void;
 export declare function pad(len: number, chars?: string): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>) => void;
+export declare function padLeft(len: number, chars?: string): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>) => void;
+export declare function padRight(len: number, chars?: string): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>) => void;
 export declare function repeat(n: number): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>) => void;
 export declare function truncate(length: number, omission?: string, separator?: RegExp | string): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>) => void;
 export declare function trim(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>): void;

@@ -1,7 +1,8 @@
 
 import { methodFactory } from "./factories";
 import {
-    camelCase, escape, kebabCase, pad, repeat, snakeCase, startCase, trim, truncate, upperFirst, words
+    camelCase, escape, kebabCase, pad, padEnd, padStart, repeat,
+    snakeCase, startCase, trim, truncate, upperFirst, words
 } from "lodash";
 
 
@@ -23,6 +24,22 @@ export function pad (len: number, chars = " ") {
 
     return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>) {
         return methodFactory<any>((str: string) => pad.call(pad, str, len, chars), descriptor);
+    }
+}
+
+
+export function padLeft (len: number, chars = " ") {
+
+    return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>) {
+        return methodFactory<any>((str: string) => padStart.call(padStart, str, len, chars), descriptor);
+    }
+}
+
+
+export function padRight (len: number, chars = " ") {
+
+    return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>) {
+        return methodFactory<any>((str: string) => padEnd.call(padEnd, str, len, chars), descriptor);
     }
 }
 

@@ -9,6 +9,7 @@ var lib_1 = require("../lib");
 var MyClass = (function () {
     function MyClass(foo) {
         this.foo = foo;
+        this.prop = "initial";
     }
     MyClass.prototype.setFoo = function (v) {
         this.foo = v;
@@ -35,6 +36,9 @@ var MyClass = (function () {
         ];
     };
     __decorate([
+        lib_1.setterGetter(lib_1.repeat(2), lib_1.padLeft(10))
+    ], MyClass.prototype, "prop", void 0);
+    __decorate([
         lib_1.toValues
     ], MyClass.prototype, "getObj", null);
     __decorate([
@@ -49,6 +53,9 @@ var MyClass = (function () {
     return MyClass;
 }());
 var c = new MyClass("foo");
+console.log(c.prop);
+c.prop = "changed";
+console.log(c.prop);
 console.log("getArray() =>", c.getArray());
 // for (let a of c.getArray()) {
 //     console.log("IT =>", a);
@@ -57,7 +64,7 @@ console.log("getObject() =>", c.getObj());
 console.log("getArrayOfObjects() =>", c.getArrayOfObjects());
 var v = c.add(4, 5, 6);
 console.log("add() =>", v());
-var it = c.getRandom();
-for (var i of it) {
-    console.log(i);
-}
+// let it = c.getRandom();
+// for (let i of it) {
+//     console.log(i);
+// }

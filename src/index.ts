@@ -35,7 +35,7 @@ import {
     memoize, partial, rearg, throttle, tryCatch
 } from "./decorators/functions";
 import {
-    cast, escape, pad, repeat, truncate, trim,
+    cast, escape, pad, padLeft, padRight, repeat, truncate, trim,
     camelCase, kebabCase, snakeCase, startCase, titleCase, words
 } from "./decorators/strings";
 import {
@@ -48,6 +48,7 @@ import {
     at, defaults, extend, includes, mapKeys, mapValues, omit, orderBy,
     toTuples, toValues,
 } from "./decorators/objects";
+import { setterGetter } from "./decorators/properties";
 import { dateFormat } from "./decorators/dates";
 
 /**
@@ -70,7 +71,7 @@ export {
     // String
     cast,
     escape,
-    pad,
+    pad, padLeft, padRight,
     repeat,
     truncate,
     trim,
@@ -105,6 +106,8 @@ export {
     orderBy,
     toTuples,
     toValues,
+    // Properties
+    setterGetter,
     // Dates
     dateFormat
 }
