@@ -1,5 +1,6 @@
 
-import { fromJSON } from "./annotations";
+import { jsonKey, fromJSON } from "./annotations";
+
 
 
 export namespace Serializer {
@@ -12,9 +13,15 @@ export namespace Serializer {
      */
     export function deserialize <T extends FunctionConstructor> (clazz: T, json: Object | string): T {
 
-        const c = Object.create(clazz.prototype); // new clazz();
-        (c as any)[fromJSON].call(c, typeof json === "string" ? JSON.parse(json) : json);
-        // c.$$fromJSON(json);
-        return c as any;
+        class JsonableObject {}
+
+        JsonableObject.prototype = Object.create(clazz.prototype);
+        // JsonableObject.prototype.constructor = JsonableObject;
+        // console.log(">>", String(JsonableObject), clazz.prototype[fromJSON]);
+        const obj = new JsonableObject();
+        (obj as any).prototype = Object.create(clazz.prototype);
+        // console.log("INIT", obj);
+        (obj as any).prototype[fromJSON].call(obj, typeof json === "string" ? JSON.parse(json) : json);
+        return obj as T;
     }
 }

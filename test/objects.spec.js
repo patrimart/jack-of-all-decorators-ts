@@ -36,7 +36,7 @@ var MyClass = (function () {
         ];
     };
     __decorate([
-        lib_1.setterGetter(lib_1.repeat(2), lib_1.padLeft(10))
+        lib_1.getterSetter(lib_1.repeat(2), lib_1.padLeft(10))
     ], MyClass.prototype, "prop", void 0);
     __decorate([
         lib_1.toValues

@@ -1,8 +1,8 @@
 
-import * as jsonablesInterfaces         from "./jsonables/interfaces";
+import * as jsonablesInterfaces   from "./jsonables/interfaces";
 import * as jsonablesTransformers from "./jsonables/transformers";
-import * as jsonablesSerializer         from "./jsonables/Serializer";
-import * as jsonablesAnnotations        from "./jsonables/annotations";
+import * as jsonablesSerializer   from "./jsonables/Serializer";
+import * as jsonablesAnnotations  from "./jsonables/annotations";
 
 /**
  * Namespace for the jsonables library.
@@ -27,6 +27,7 @@ export namespace Json {
     export const Serializable      = jsonablesAnnotations.Serializable;
     export const serializeProperty = jsonablesAnnotations.serializeProperty;
     export const serializeMethod   = jsonablesAnnotations.serializeMethod;
+    export const deserializeMethod = jsonablesAnnotations.deserializeMethod;
     export const serializeParam    = jsonablesAnnotations.serializeParam;
 }
 
@@ -48,7 +49,7 @@ import {
     at, defaults, extend, includes, mapKeys, mapValues, omit, orderBy,
     toTuples, toValues,
 } from "./decorators/objects";
-import { setterGetter } from "./decorators/properties";
+import { getterSetter, setterGetter } from "./decorators/properties";
 import { dateFormat } from "./decorators/dates";
 
 /**
@@ -107,7 +108,7 @@ export {
     toTuples,
     toValues,
     // Properties
-    setterGetter,
+    getterSetter, setterGetter,
     // Dates
     dateFormat
 }

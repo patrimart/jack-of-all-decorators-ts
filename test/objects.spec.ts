@@ -1,13 +1,13 @@
 
 import {
-    curry, partial, iterator, iterable, lazy, setterGetter, repeat, padLeft,
+    curry, partial, iterator, iterable, lazy, getterSetter, setterGetter, repeat, padLeft,
     at, extend, includes, mapKeys, mapValues, omit, orderBy,
     toTuples, toValues,
 } from "../lib";
 
 class MyClass {
 
-    @setterGetter(
+    @getterSetter(
         repeat(2),
         padLeft(10)
     )

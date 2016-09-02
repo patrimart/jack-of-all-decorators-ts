@@ -10,28 +10,27 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 var lib_1 = require("../lib");
 var MyClass = (function () {
-    function MyClass(foo, arg, _class) {
+    function MyClass(foo, arg) {
         if (arg === void 0) { arg = "default"; }
         this.foo = foo;
         this.arg = arg;
-        this._class = _class;
         this.bar = "12345";
     }
     MyClass.prototype.getFoo = function () {
         return this.foo;
     };
-    MyClass.prototype.getClass = function () {
-        return this._class;
+    MyClass.prototype.setFoo = function (v) {
+        this.foo = v;
     };
     __decorate([
-        lib_1.Json.serializeProperty("barbar", lib_1.Json.transformers.OverrideValue("999"))
+        lib_1.Json.serializeProperty("barbar")
     ], MyClass.prototype, "bar", void 0);
     __decorate([
         lib_1.Json.serializeMethod()
     ], MyClass.prototype, "getFoo", null);
     __decorate([
-        lib_1.Json.serializeMethod()
-    ], MyClass.prototype, "getClass", null);
+        lib_1.Json.deserializeMethod()
+    ], MyClass.prototype, "setFoo", null);
     MyClass = __decorate([
         lib_1.Json.Serializable(),
         __param(1, lib_1.Json.serializeParam())
@@ -40,7 +39,13 @@ var MyClass = (function () {
 }());
 var c = new MyClass(undefined);
 c.bar = "9876";
-var d = new MyClass("bar", "arguments", new MyClass("foobar"));
+var d = new MyClass("bar", "arguments");
 d.arg = "newDefault";
-console.log("JSON =>", JSON.stringify(c.toJSON()));
-console.log("JSON =>", JSON.stringify(d));
+var json = c.toJSON();
+console.log(c);
+console.log("JSON =>", JSON.stringify(json));
+// const a: typeof MyClass = MyClass.prototype;
+var clazz = lib_1.Json.Serializer.deserialize(MyClass, json);
+console.log(clazz);
+console.log("bar=", clazz.bar, "getFoo=", clazz.getFoo(), "arg=", clazz.arg);
+console.log(JSON.stringify(clazz.toJSON()));
