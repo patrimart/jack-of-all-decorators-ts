@@ -1,7 +1,7 @@
 import { IClassConfig, ITransformerResponse } from "./interfaces";
-export declare const constArgs: any;
-export declare const jsonKey: any;
-export declare const fromJSON: any;
+export declare const constArgs: symbol;
+export declare const jsonKey: symbol;
+export declare const fromJSON: symbol;
 export declare function Serializable(configs?: IClassConfig): (target: any) => void;
 export declare function serializeProperty<T, U>(name?: string, ...transformers: ITransformerResponse<T, U>[]): (target: any, propertyKey: string | symbol) => void;
 export declare function deserializeProperty<T, U>(name?: string, ...transformers: ITransformerResponse<T, U>[]): (target: any, propertyKey: string | symbol) => void;

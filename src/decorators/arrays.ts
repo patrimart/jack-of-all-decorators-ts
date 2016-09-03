@@ -55,7 +55,7 @@ export function intersectionWith<T> (equality?: (a: T, b: T) => boolean) {
  * @param descriptor
  */
 export function iterator<T> (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => T[]> | TypedPropertyDescriptor<T[]>) {
-    return methodFactory<any> ((arr: any[]) => arr[Symbol.iterator](), descriptor);
+    return methodFactory<any> ((arr: any[]) => (arr as any)[Symbol.iterator](), descriptor);
 }
 
 

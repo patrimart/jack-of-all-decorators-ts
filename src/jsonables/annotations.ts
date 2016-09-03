@@ -112,7 +112,7 @@ export function Serializable (configs?: IClassConfig) {
 
             const fromJsonData = target.prototype[fromJSON] as IJsonKeyData[];
 
-            Object.defineProperty(target.prototype, fromJSON, {
+            Object.defineProperty(target.prototype, fromJSON as any, {
                 configurable: false,
                 enumerable: false,
                 writable: false,

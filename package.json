@@ -3,8 +3,9 @@
   "version": "1.0.0-beta1",
   "description": "Annotation library for TypeScript.",
   "main": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
   "scripts": {
-    "compile-lib": "tsc",
+    "compile-lib": "rm -r lib/* && tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
@@ -16,7 +17,6 @@
   "license": "ISC",
   "dependencies": {
     "dateformat": "^1.0.12",
-    "lodash": "^4.15.0",
-    "reflect-metadata": "^0.1.8"
+    "lodash": "^4.15.0"
   }
 }
