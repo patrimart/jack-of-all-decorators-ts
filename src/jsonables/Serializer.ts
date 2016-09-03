@@ -1,27 +1,22 @@
 
-import { jsonKey, fromJSON } from "./annotations";
-
+import { constArgs, fromJSON } from "./annotations";
 
 
 export namespace Serializer {
 
     /**
      *
-     * @param clazz
+     * @param Clazz
      * @param json
+     * @param [args]
      * @returns {T}
      */
-    export function deserialize <T extends FunctionConstructor> (clazz: T, json: Object | string): T {
+    export function deserialize <T extends ObjectConstructor> (Clazz: T & Function, json: Object | string, ...args: any[]): T {
 
-        class JsonableObject {}
+        args = args || Clazz.prototype[constArgs] || [];
 
-        JsonableObject.prototype = Object.create(clazz.prototype);
-        // JsonableObject.prototype.constructor = JsonableObject;
-        // console.log(">>", String(JsonableObject), clazz.prototype[fromJSON]);
-        const obj = new JsonableObject();
-        (obj as any).prototype = Object.create(clazz.prototype);
-        // console.log("INIT", obj);
-        (obj as any).prototype[fromJSON].call(obj, typeof json === "string" ? JSON.parse(json) : json);
+        const obj = args.length === 0 ? Object.create(Clazz.prototype) : new (Clazz.bind(Clazz, ...args));
+        obj[fromJSON].call(obj, typeof json === "string" ? JSON.parse(json) : json);
         return obj as T;
     }
 }

@@ -14,6 +14,8 @@ export type ITransformer<T, U> = (...args: any[]) => ITransformerResponse<T, U>;
  */
 export interface IClassConfig {
 
+    // Arguments array to initialize deserialized classes. Default: undefined.
+    defaultConstruction?: any[];
     // Converts the getter name: getFoo => foo. Default: true.
     autoNameGetters?: boolean;
     // Converts undefined values to null values. Default: true.

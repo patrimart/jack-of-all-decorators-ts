@@ -17,9 +17,11 @@ export declare namespace Json {
     const Serializer: typeof jsonablesSerializer.Serializer;
     const Serializable: typeof jsonablesAnnotations.Serializable;
     const serializeProperty: typeof jsonablesAnnotations.serializeProperty;
+    const deserializeProperty: typeof jsonablesAnnotations.deserializeProperty;
     const serializeMethod: typeof jsonablesAnnotations.serializeMethod;
     const deserializeMethod: typeof jsonablesAnnotations.deserializeMethod;
     const serializeParam: typeof jsonablesAnnotations.serializeParam;
+    const deserializeParam: typeof jsonablesAnnotations.deserializeParam;
 }
 import { curry, defensiveCopy, debounce, defer, delay, iterable, lazy, memoize, partial, rearg, throttle, tryCatch } from "./decorators/functions";
 import { cast, escape, pad, padLeft, padRight, repeat, truncate, trim, camelCase, kebabCase, snakeCase, startCase, titleCase, words } from "./decorators/strings";

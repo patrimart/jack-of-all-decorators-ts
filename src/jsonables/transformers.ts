@@ -76,7 +76,6 @@ export function ToBoolean (value: any): boolean {
  * <code>@serializeProperty("foo", ToString);</code>
  * @param {*} value - the property value.
  * @returns {String}
- * @constructor
  */
 export function ToString (value: any): string {
     if (value === undefined) return "undefined";
@@ -87,7 +86,6 @@ export function ToString (value: any): string {
  * Converts a value to a number with (parseFloat(value) || 0).
  * @param {*} value - the property value.
  * @returns {number}
- * @constructor
  */
 export function ToNumber (value: any): number {
     return parseFloat(value) || 0;

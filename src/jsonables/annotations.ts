@@ -6,6 +6,7 @@ import { IClassConfig, ITransformerResponse } from "./interfaces";
 const RE_PARAMS = /^[^(]+\(([$\w,\s]+)*\)/;
 
 const IClassConfigDefaults: IClassConfig = {
+    defaultConstruction: undefined,
     autoNameGetters: true,
     undefinedToNull: true,
     ignoreNulls: false,
@@ -20,6 +21,7 @@ interface IJsonKeyData {
     transformers: ITransformerResponse<any, any>[];
 }
 
+export const constArgs = Symbol("$$jsonConstArgs");
 export const jsonKey = Symbol("$$jsonKey");
 export const fromJSON = Symbol("$$fromJSON");
 
@@ -32,7 +34,10 @@ export function Serializable (configs?: IClassConfig) {
     configs = Object.assign({}, IClassConfigDefaults, configs);
 
     function keyToJsonKey (k: string) {
-        if (configs.autoNameGetters) k = k.replace(/^get([\w])/i, (a, b) => b.toLowerCase());
+        if (configs.autoNameGetters) {
+            k = k.replace(/^get([\w])/i, (a, b) => b.toLowerCase());
+            k = k.replace(/^set([\w])/i, (a, b) => b.toLowerCase());
+        }
         if (configs.toCamelCase) return camelCase(k);
         if (configs.toSnakeCase) return snakeCase(k);
         if (configs.toKebabCase) return kebabCase(k);
@@ -41,39 +46,76 @@ export function Serializable (configs?: IClassConfig) {
 
     return function (target: any) {
 
-        const jsonKeyData = target.prototype[jsonKey] as IJsonKeyData[];
-        delete target.prototype[jsonKey];
+        if (Array.isArray(configs.defaultConstruction) && configs.defaultConstruction.length > 0) {
+            target.prototype[constArgs] = configs.defaultConstruction;
+        }
 
-        Object.defineProperty(target.prototype, "toJSON", {
-            // configurable: false,
-            // enumerable: false,
-            // writable: false,
-            value: function (): any {
+        // If no decorators on methods, properties and parameters, build defaults.
+        if (target.prototype[jsonKey] === undefined && target.prototype[fromJSON] === undefined) {
 
-                return jsonKeyData.reduce((p: any, c: IJsonKeyData) => {
-
-                    const value = c.transformers.reduce((p2, c2) => c2.call(this, p2), c.value.call(this));
-                    const key = keyToJsonKey(c.key);
-
-                    if (configs.undefinedToNull && value === undefined)
-                        p[key] = null;
-                    else if (configs.ignoreNulls === false || (configs.ignoreNulls && value !== null))
-                        p[key] = value;
-
-                    return p;
-
-                }, {});
+            for (const prop in target.prototype) {
+                // console.log("=>", p, Object.getOwnPropertyDescriptor(target.prototype, p));
+                if (target.prototype.hasOwnProperty(prop)) {
+                    const key = keyToJsonKey(prop);
+                    const trg = target.prototype;
+                    const descriptor = Object.getOwnPropertyDescriptor(trg, prop);
+                    if (descriptor.value) {
+                        if (prop.startsWith("set")) {
+                            assignFromJson(trg, key, descriptor.value, []);
+                        } else if (prop.startsWith("get")) {
+                            assignJsonKey(trg, key, descriptor.value, []);
+                        } else {
+                            assignJsonKey(trg, key, descriptor.value, []);
+                            assignFromJson(trg, key, descriptor.value, []);
+                        }
+                    } else {
+                        if (descriptor.set) {
+                            assignFromJson(trg, key, descriptor.set, []);
+                        }
+                        if (descriptor.get) {
+                            assignJsonKey(trg, key, descriptor.get, []);
+                        }
+                    }
+                }
             }
-        });
+        }
+
+        if (target.prototype[jsonKey] !== undefined) {
+
+            const jsonKeyData = target.prototype[jsonKey] as IJsonKeyData[];
+            delete target.prototype[jsonKey];
+
+            Object.defineProperty(target.prototype, "toJSON", {
+                configurable: false,
+                enumerable: false,
+                writable: false,
+                value: function (): any {
+
+                    return jsonKeyData.reduce((p: any, c: IJsonKeyData) => {
+
+                        const value = c.transformers.reduce((p2, c2) => c2.call(this, p2), c.value.call(this));
+                        const key = keyToJsonKey(c.key);
+
+                        if (configs.undefinedToNull && value === undefined)
+                            p[key] = null;
+                        else if (configs.ignoreNulls === false || (configs.ignoreNulls && value !== null))
+                            p[key] = value;
+
+                        return p;
+
+                    }, {});
+                }
+            });
+        }
 
         if (target.prototype[fromJSON] !== undefined) {
 
             const fromJsonData = target.prototype[fromJSON] as IJsonKeyData[];
 
             Object.defineProperty(target.prototype, fromJSON, {
-                // configurable: false,
-                // enumerable: false,
-                // writable: false,
+                configurable: false,
+                enumerable: false,
+                writable: false,
                 value: function (value: any) {
 
                     if (value === undefined || typeof value !== "object" || typeof value === "function") {
@@ -110,6 +152,12 @@ export function serializeProperty<T, U> (name?: string, ...transformers: ITransf
 
     return function (target: any, propertyKey: string | symbol) {
         assignJsonKey (target, name || propertyKey, function () { return this[propertyKey]; }, transformers);
+    };
+}
+
+export function deserializeProperty<T, U> (name?: string, ...transformers: ITransformerResponse<T, U>[]) {
+
+    return function (target: any, propertyKey: string | symbol) {
         assignFromJson (target, name || propertyKey, function (v: any) { this[propertyKey] = v; }, transformers);
     };
 }
@@ -129,7 +177,7 @@ export function serializeMethod<T, U> (name?: string, ...transformers: ITransfor
 export function deserializeMethod<T, U> (name?: string, ...transformers: ITransformerResponse<T, U>[]) {
 
     return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) {
-        assignFromJson (target, name || propertyKey, descriptor.value || descriptor.get, transformers);
+        assignFromJson (target, name || propertyKey, descriptor.value || descriptor.set, transformers);
     }
 }
 
@@ -145,6 +193,15 @@ export function serializeParam<T, U> (name?: string, ...transformers: ITransform
         propertyKey = target.toString().match(RE_PARAMS)[1].split(',')[parameterIndex].trim();
         const key = name || propertyKey;
         assignJsonKey (target.prototype, key, function () { return this[propertyKey]; }, transformers);
+    }
+}
+
+export function deserializeParam<T, U> (name?: string, ...transformers: ITransformerResponse<T, U>[]) {
+
+    return function (target: any, propertyKey: string | symbol, parameterIndex: number) {
+        // console.log("serializeParam", target.toString(), propertyKey, parameterIndex);
+        propertyKey = target.toString().match(RE_PARAMS)[1].split(',')[parameterIndex].trim();
+        const key = name || propertyKey;
         assignFromJson (target.prototype, key, function (v: any) { this[propertyKey] = v; }, transformers);
     }
 }
