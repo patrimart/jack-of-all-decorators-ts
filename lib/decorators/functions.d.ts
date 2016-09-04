@@ -1,4 +1,4 @@
-export declare function debounce<T>(maxWait: number, leading?: boolean, trailing?: boolean, wait?: number): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) => void;
+export declare function debounce<T>(wait: number, maxWait?: number, leading?: boolean, trailing?: boolean): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) => void;
 export declare function curry(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>): void;
 export declare function defer(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>): void;
 export declare function delay(wait: number): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) => void;

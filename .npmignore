@@ -1,2 +1,5 @@
-/src
-/test
+src
+test
+.gitignore
+.travis.yml
+tslint.json

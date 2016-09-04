@@ -10,7 +10,7 @@ export declare function mean<T>(target: any, propertyKey: string, descriptor: Ty
 export declare function reverse<T>(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => T[]> | TypedPropertyDescriptor<T[]>): void;
 export declare function sample<T>(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => T[]> | TypedPropertyDescriptor<T[]>): void;
 export declare function shuffle<T>(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => T[]> | TypedPropertyDescriptor<T[]>): void;
-export declare function sort<T>(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => T[]> | TypedPropertyDescriptor<T[]>): void;
+export declare function sort<T>(...keys: string[]): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => T[]> | TypedPropertyDescriptor<T[]>) => void;
 export declare function sum<T>(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => T[]> | TypedPropertyDescriptor<T[]>): void;
 export declare function takeWhile<T>(predicate?: (v: T) => boolean): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => T[]> | TypedPropertyDescriptor<T[]>) => void;
 export declare function union<T>(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => T[]> | TypedPropertyDescriptor<T[]>): void;

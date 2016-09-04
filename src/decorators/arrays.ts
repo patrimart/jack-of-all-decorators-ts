@@ -79,8 +79,13 @@ export function shuffle<T> (target: any, propertyKey: string, descriptor: TypedP
 }
 
 
-export function sort<T> (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => T[]> | TypedPropertyDescriptor<T[]>) {
-    return methodFactory<any> (sortBy.bind(sortBy), descriptor);
+// export function sort<T> (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => T[]> | TypedPropertyDescriptor<T[]>) {
+//     return methodFactory<any> (sortBy.bind(sortBy), descriptor);
+// }
+export function sort<T> (...keys: string[]) {
+    return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => T[]> | TypedPropertyDescriptor<T[]>) {
+        return methodFactory<any>((arr: T[]) => sortBy.call(sortBy, arr, keys), descriptor);
+    }
 }
 
 

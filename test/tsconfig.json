@@ -1,7 +1,7 @@
 {
     "compileOnSave": true,
     "compilerOptions": {
-        "declaration": true,
+        "declaration": false,
         "module": "commonjs",
         "moduleResolution": "node",
         "noImplicitAny": true,
@@ -9,12 +9,12 @@
         "preserveConstEnums": true,
         "emitDecoratorMetadata": false,
         "experimentalDecorators": true,
-        "outDir": "./lib",
-        "sourceMap": true,
+        "outDir": "./",
+        "sourceMap": false,
         "target": "es5"
     },
     "files": [
-        "./src/index.ts",
-        "./typings/index.d.ts"
+        "index.spec.ts",
+        "../typings/index.d.ts"
     ]
 }

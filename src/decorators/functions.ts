@@ -1,31 +1,49 @@
-
-import { cloneDeep, curry, debounce, defer, delay, rearg, throttle } from "lodash";
+import { cloneDeep, curry, debounce, defer, delay, partial, rearg, throttle } from "lodash";
 import { methodFactory, methodFactoryBind } from "./factories";
 
 
 
-export function debounce<T> (maxWait: number, leading = true, trailing = ! leading, wait = 0) {
-
+export function debounce<T> (wait: number, maxWait = wait * 4, leading = true, trailing = ! leading) {
     return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
-        return methodFactoryBind<any>((func: Function) => debounce.call(debounce, func, { maxWait, leading, trailing, wait }), descriptor);
+        return methodFactoryBind<any>(
+            function (func: Function) {
+                return debounce.call(this, func, wait, { maxWait, leading, trailing });
+            },
+            propertyKey, descriptor
+        );
     }
 }
 
 
 export function curry (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
-    return methodFactoryBind<any>((func: Function) => curry.call(curry, func), descriptor);
+    return methodFactoryBind<any>(
+        function (func: Function) {
+            return curry.call(this, func);
+        },
+        propertyKey, descriptor
+    );
 }
 
 
 export function defer (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
-    return methodFactoryBind<any>((func: Function) => defer.call(defer, func), descriptor);
+    return methodFactoryBind<any> (
+        function (func: Function) {
+            return defer.call(this, func)
+        },
+        propertyKey, descriptor
+    );
 }
 
 
 export function delay (wait: number) {
 
     return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
-        return methodFactoryBind<any>((func: Function) => delay.call(delay, func, wait), descriptor);
+        return methodFactoryBind<any>(
+            function (func: Function) {
+                return delay.call(this, func, wait);
+            },
+            propertyKey, descriptor
+        );
     }
 }
 
@@ -45,10 +63,17 @@ export function defensiveCopy (target: any, propertyKey: string, descriptor: Typ
 export function iterable (limit = Number.MAX_SAFE_INTEGER) {
 
     return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
-        return methodFactoryBind<any>((func: Function) => ({
-            next () { return { value: limit > 0 ? func.call(func) : undefined, done: limit-- <= 0 }; },
-            [Symbol.iterator] () { return this; }
-        }), descriptor);
+        return methodFactoryBind<any> (
+            function (func: Function)  {
+                return function (...a: any[]) {
+                    return {
+                        next () { return { value: limit > 0 ? func.apply(this, a) : undefined, done: limit-- <= 0 }; },
+                        [Symbol.iterator] () { return this; }
+                    };
+                };
+            },
+            propertyKey, descriptor
+        );
     }
 }
 
@@ -56,14 +81,22 @@ export function iterable (limit = Number.MAX_SAFE_INTEGER) {
 export function lazy (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
     return methodFactoryBind<any>(function (func: Function) {
         let cache: any;
-        return () => cache || (cache = func.call(func));
-    }, descriptor);
+        return function (...a: any[]) {
+            return cache || (cache = func.bind(this, ...a));
+        };
+    }, propertyKey, descriptor);
 }
 
 
 export function memoize (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) {
-    const memKey = Symbol(propertyKey);
-    return methodFactory (function (v: any) { return this[memKey] = this[memKey] || v; }, descriptor);
+    let memCache: any;
+    return methodFactoryBind<any> (
+        function (func: Function) {
+            return function (...a: any[]) {
+                return memCache = memCache || func.apply(this, a);
+            };
+        }, propertyKey, descriptor
+    );
 }
 
 
@@ -71,7 +104,12 @@ export function partial (...args: any[]) {
 
     return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
         // Using curry to achieve c.method(3), where partial is forcing c.method()(3)
-        return methodFactoryBind<any>((func: Function) => curry.call(curry, func)(...args), descriptor);
+        return methodFactoryBind<any>(
+            function (func: Function) {
+                return partial.call(this, func, ...args);
+            },
+            propertyKey, descriptor
+        );
     }
 }
 
@@ -79,14 +117,24 @@ export function partial (...args: any[]) {
 export function rearg (...indexes: number[]) {
 
     return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
-        return methodFactoryBind<any>((func: Function) => rearg.call(rearg, func, indexes), descriptor);
+        return methodFactoryBind<any>(
+            function (func: Function) {
+                return rearg.call(this, func, indexes);
+            },
+            propertyKey, descriptor
+        );
     }
 }
 
 export function throttle (wait: number, leading = true, trailing = ! leading) {
 
     return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
-        return methodFactoryBind<any>((func: Function) => throttle.call(throttle, func, { leading, trailing, wait }), descriptor);
+        return methodFactoryBind<any>(
+            function (func: Function) {
+                return throttle.call(this, func, wait, { leading, trailing });
+            },
+            propertyKey, descriptor
+        );
     }
 }
 
