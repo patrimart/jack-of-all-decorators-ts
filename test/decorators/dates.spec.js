@@ -14,13 +14,13 @@ var MyTest = (function () {
         return new Date(1472965878944);
     };
     __decorate([
-        dates_1.dateFormat("dddd, mmmm dS, yyyy, h:MM:ss TT")
+        dates_1.dateFormat("dddd, mmmm dS, yyyy, h:MM:ss TT", true)
     ], MyTest.prototype, "getDate", null);
     return MyTest;
 }());
 describe("Dates decorator", function () {
     var c = new MyTest();
     it("dateFormat", function () {
-        assert.deepEqual(c.getDate(), "Saturday, September 3rd, 2016, 10:11:18 PM");
+        assert.deepEqual(c.getDate(), "Sunday, September 4th, 2016, 5:11:18 AM");
     });
 });
