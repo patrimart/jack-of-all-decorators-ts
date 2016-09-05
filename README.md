@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/patrimart/jack-of-all-decorators-ts.svg?branch=master)](https://travis-ci.org/patrimart/jack-of-all-decorators-ts)
+[![Coverage Status](https://coveralls.io/repos/github/patrimart/jack-of-all-decorators-ts/badge.svg?branch=master)](https://coveralls.io/github/patrimart/jack-of-all-decorators-ts?branch=master)
+[![GitHub version](https://badge.fury.io/gh/patrimart%2Fjack-of-all-decorators-ts.svg)](https://badge.fury.io/gh/patrimart%2Fjack-of-all-decorators-ts)
+
 
 # Jack-of-All-Decorators
 ---
