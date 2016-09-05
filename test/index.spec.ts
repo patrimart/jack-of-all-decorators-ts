@@ -1,4 +1,3 @@
-require("blanket");
 
 import "./decorators/arrays.spec";
 import "./decorators/dates.spec";

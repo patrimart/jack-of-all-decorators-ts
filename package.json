@@ -7,10 +7,15 @@
   "scripts": {
     "compile-lib": "rm -rf lib/* && tsc",
     "build-test": "rm -rf test/**/*.js && rm -rf test/typings && cd test && typings install && tsc",
-    "test": "mocha ./test/index.spec.js -R mocha-lcov-reporter > ./node_modules/coveralls/bin/coveralls.js"
+    "test": "mocha --require blanket -R mocha-lcov-reporter > ./node_modules/coveralls/bin/coveralls.js"
   },
   "engines": {
     "node": ">= 4.0.0"
+  },
+  "config": {
+    "blanket": {
+      "pattern": "./test/"
+    }
   },
   "dependencies": {
     "dateformat": "^1.0.12",
