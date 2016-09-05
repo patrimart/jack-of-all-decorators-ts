@@ -23,12 +23,12 @@ export namespace Json {
         ToNumber      : jsonablesTransformers.ToNumber,
     };
 
-    export const Serializer        = jsonablesSerializer.Serializer;
-    export const Serializable      = jsonablesAnnotations.Serializable;
-    export const serializeProperty = jsonablesAnnotations.serializeProperty;
+    export const Serializer          = { deserialize: jsonablesSerializer.Serializer.deserialize };
+    export const Serializable        = jsonablesAnnotations.Serializable;
+    export const serializeProperty   = jsonablesAnnotations.serializeProperty;
     export const deserializeProperty = jsonablesAnnotations.deserializeProperty;
-    export const serializeMethod   = jsonablesAnnotations.serializeMethod;
-    export const deserializeMethod = jsonablesAnnotations.deserializeMethod;
-    export const serializeParam    = jsonablesAnnotations.serializeParam;
+    export const serializeMethod     = jsonablesAnnotations.serializeMethod;
+    export const deserializeMethod   = jsonablesAnnotations.deserializeMethod;
+    export const serializeParam      = jsonablesAnnotations.serializeParam;
     export const deserializeParam    = jsonablesAnnotations.deserializeParam;
 }

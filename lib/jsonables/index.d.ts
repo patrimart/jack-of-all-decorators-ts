@@ -1,5 +1,4 @@
 import * as jsonablesInterfaces from "./interfaces";
-import * as jsonablesSerializer from "./Serializer";
 import * as jsonablesAnnotations from "./annotations";
 export declare namespace Json {
     type IClassConfig = jsonablesInterfaces.IClassConfig;
@@ -14,7 +13,9 @@ export declare namespace Json {
         ToString: (value: any) => string;
         ToNumber: (value: any) => number;
     };
-    const Serializer: typeof jsonablesSerializer.Serializer;
+    const Serializer: {
+        deserialize: <T>(Clazz: any, json: Object | string, ...args: any[]) => T;
+    };
     const Serializable: typeof jsonablesAnnotations.Serializable;
     const serializeProperty: typeof jsonablesAnnotations.serializeProperty;
     const deserializeProperty: typeof jsonablesAnnotations.deserializeProperty;

@@ -2,3 +2,9 @@
 require("./decorators/arrays.spec");
 require("./decorators/dates.spec");
 require("./decorators/functions.spec");
+require("./decorators/objects.spec");
+require("./decorators/properties.spec");
+require("./decorators/strings.spec");
+require("./jsonables/default.spec");
+require("./jsonables/explicit.spec");
+require("./jsonables/configs.spec");

@@ -11,11 +11,11 @@ export namespace Serializer {
      * @param [args]
      * @returns {T}
      */
-    export function deserialize <T extends ObjectConstructor> (Clazz: T & Function, json: Object | string, ...args: any[]): T {
+    export function deserialize <T> (Clazz: any, json: Object | string, ...args: any[]): T {
 
-        args = args || Clazz.prototype[constArgs] || [];
+        args = (args.length && args) || Clazz.prototype[constArgs] || [];
 
-        const obj = args.length === 0 ? Object.create(Clazz.prototype) : new (Clazz.bind(Clazz, ...args));
+        const obj = args.length === 0 ? Object.create(Clazz.prototype) : new Clazz(...args);
         obj[fromJSON].call(obj, typeof json === "string" ? JSON.parse(json) : json);
         return obj as T;
     }

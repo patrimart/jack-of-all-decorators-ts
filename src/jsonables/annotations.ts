@@ -4,6 +4,7 @@ import { IClassConfig, ITransformerResponse } from "./interfaces";
 
 
 const RE_PARAMS = /^[^(]+\(([$\w,\s]+)*\)/;
+const RE_PROPS = /\sthis.([^_][$\w]+)\s*=/g;
 
 const IClassConfigDefaults: IClassConfig = {
     defaultConstruction: undefined,
@@ -52,6 +53,15 @@ export function Serializable (configs?: IClassConfig) {
 
         // If no decorators on methods, properties and parameters, build defaults.
         if (target.prototype[jsonKey] === undefined && target.prototype[fromJSON] === undefined) {
+
+            let classProps: RegExpExecArray;
+            while ((classProps = RE_PROPS.exec(String(target))) !== null) {
+                const prop = classProps[1];
+                const key = keyToJsonKey(classProps[1]);
+                classProps = undefined;
+                assignJsonKey(target.prototype, key, function () { return this[prop]; }, []);
+                assignFromJson(target.prototype, key, function (v: any) { this[prop] = v; }, []);
+            }
 
             for (const prop in target.prototype) {
                 // console.log("=>", p, Object.getOwnPropertyDescriptor(target.prototype, p));

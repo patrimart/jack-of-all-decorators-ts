@@ -52,7 +52,7 @@ export function repeat (n: number) {
 }
 
 
-export function truncate (length: number, omission?: string, separator?: RegExp | string) {
+export function truncate (length: number, omission = "...", separator: RegExp | string = " ") {
 
     return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => string> | TypedPropertyDescriptor<string>) {
         return methodFactory<any>((str: string) => truncate.call(truncate, str, { length, omission, separator }), descriptor);

@@ -15,7 +15,7 @@ class MyTest {
 
     @debounce(100, 100)
     public getDebounce () {
-        console.log("Count", this.counter);
+        // console.log("Count", this.counter);
         return this.counter++;
     }
 
@@ -65,7 +65,8 @@ class MyTest {
     }
 
     @throttle(100)
-    public getThrottle () {
+    public getThrottle (input: number) {
+        // console.log(input);
         return ++this.counter;
     }
 
@@ -166,7 +167,7 @@ describe ("Functions decorators", function () {
     it ("throttle", function (done) {
 
         const count = c.counter;
-        const i = setInterval(() => c.getThrottle(), 10);
+        const i = setInterval(() => c.getThrottle(Math.random()), 10);
         setTimeout(() => {
             clearInterval(i);
             if (c.counter > count + 2) done (`Throttle didn't throttle: ${c.counter} > ${count}.`);

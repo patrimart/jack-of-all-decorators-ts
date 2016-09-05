@@ -13,7 +13,6 @@ var MyTest = (function () {
         this.delayValue = Date.now();
     }
     MyTest.prototype.getDebounce = function () {
-        console.log("Count", this.counter);
         return this.counter++;
     };
     MyTest.prototype.getCurry = function (a, b, c, d) {
@@ -43,7 +42,7 @@ var MyTest = (function () {
     MyTest.prototype.getReArg = function (a, b, c, d) {
         return a + b + c + d;
     };
-    MyTest.prototype.getThrottle = function () {
+    MyTest.prototype.getThrottle = function (input) {
         return ++this.counter;
     };
     MyTest.prototype.getTryCatch = function () {
@@ -161,7 +160,7 @@ describe("Functions decorators", function () {
     });
     it("throttle", function (done) {
         var count = c.counter;
-        var i = setInterval(function () { return c.getThrottle(); }, 10);
+        var i = setInterval(function () { return c.getThrottle(Math.random()); }, 10);
         setTimeout(function () {
             clearInterval(i);
             if (c.counter > count + 2)
