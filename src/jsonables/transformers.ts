@@ -62,8 +62,8 @@ export function IsRequired<T, _> (value: T): T {
  */
 export function ToBoolean (value: any): boolean {
 
-    if (typeof value === "string") return !! value.trim().match(/^(false|0|no|off|\s*)$/i);
-    if (Array.isArray(value) && value.length == 0) return false;
+    if (typeof value === "string") return /^(false|0|no|off|\s*)$/i.test(value.trim()) === false;
+    if (Array.isArray(value) && value.length === 0) return false;
     if (typeof value === "object" && isEmpty(value)) return false;
     return !! value;
 }

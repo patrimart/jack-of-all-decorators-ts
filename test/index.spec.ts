@@ -9,3 +9,4 @@ import "./decorators/strings.spec";
 import "./jsonables/default.spec";
 import "./jsonables/explicit.spec";
 import "./jsonables/configs.spec";
+import "./jsonables/transformers.spec";
