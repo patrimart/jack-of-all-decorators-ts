@@ -7,14 +7,15 @@
   "scripts": {
     "compile-lib": "rm -rf lib/* && tsc",
     "build-test": "rm -rf test/**/*.js && rm -rf test/typings && cd test && typings install && tsc",
-    "test": "mocha --require blanket -R mocha-lcov-reporter > ./node_modules/coveralls/bin/coveralls.js"
+    "test": "NODE_ENV=test YOURPACKAGE_COVERAGE=1 mocha test --require blanket -R mocha-lcov-reporter > ./node_modules/coveralls/bin/coveralls.js",
+    "test-local": "NODE_ENV=test YOURPACKAGE_COVERAGE=1 mocha test --require blanket -R mocha-lcov-reporter > coverage.html"
   },
   "engines": {
     "node": ">= 4.0.0"
   },
   "config": {
     "blanket": {
-      "pattern": "./test/"
+      "pattern": "./test"
     }
   },
   "dependencies": {

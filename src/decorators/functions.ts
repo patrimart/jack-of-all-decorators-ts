@@ -146,7 +146,7 @@ export function tryCatch (target: any, propertyKey: string, descriptor: TypedPro
             try {
                 return f.apply(this, a);
             } catch (err) {
-                console.log(`An error occurred on property "${propertyKey}".`, err.stack);
+                // console.log(`An error occurred on property "${propertyKey}".`, err.stack);
                 return undefined;
             }
         }
