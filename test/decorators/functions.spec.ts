@@ -85,7 +85,7 @@ describe ("Functions decorators", function () {
 
     it ("debounce", function (done) {
 
-        const i = setInterval(() => c.getDebounce(), 30);
+        const i: number = setInterval(() => c.getDebounce(), 30);
         setTimeout(() => {
             clearInterval(i);
             c.getDebounce();
@@ -167,7 +167,7 @@ describe ("Functions decorators", function () {
     it ("throttle", function (done) {
 
         const count = c.counter;
-        const i = setInterval(() => c.getThrottle(Math.random()), 10);
+        const i: number = setInterval(() => c.getThrottle(Math.random()), 10);
         setTimeout(() => {
             clearInterval(i);
             if (c.counter > count + 2) done (`Throttle didn't throttle: ${c.counter} > ${count}.`);
