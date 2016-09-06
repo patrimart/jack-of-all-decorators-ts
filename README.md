@@ -1,13 +1,27 @@
 [![Build Status](https://travis-ci.org/patrimart/jack-of-all-decorators-ts.svg?branch=master)](https://travis-ci.org/patrimart/jack-of-all-decorators-ts)
 [![Coverage Status](https://coveralls.io/repos/github/patrimart/jack-of-all-decorators-ts/badge.svg?branch=master)](https://coveralls.io/github/patrimart/jack-of-all-decorators-ts?branch=master)
 [![GitHub version](https://badge.fury.io/gh/patrimart%2Fjack-of-all-decorators-ts.svg)](https://badge.fury.io/gh/patrimart%2Fjack-of-all-decorators-ts)
-
+[![npm version](https://badge.fury.io/js/jack-of-all-decorators.svg)](https://badge.fury.io/js/jack-of-all-decorators)
 
 # Jack-of-All-Decorators (beta)
 
 Is a **TypeScript** library that contains may useful class decorators to help remove some of the tiresome boiler-plate from TypeScript/JavaScript development.
 - **Jsonables** adds JSON Serialization/Deserialization to classes.
 - **Decorators** wraps class members with convenient transformers, like **lodash** functions and others.
+
+### Contents
+- [**Installation and Usage**](#installation-and-usage)
+- [**Jsonables Module**](#jsonables-module)
+    - [Default Configuration](#default-configuration)
+    - [Advanced Configuration Decorators](#advanced-json-serialization-configuration)
+    - [Transformers](#transformers)
+- [**Decorators Module**](#decorators-module)
+    - [Arrays](#arrays) -- `difference, differenceWith, filterTruthy, flatten, fromTuples, intersection, intersectionWith, iterator, mean, reverse, sample, shuffle, sort, sum, takeWhile, union, unionWith, unique, uniqueWith, xor, xorWith, zip, unzip`
+    - [Dates](#dates) -- `dateFormat`
+    - [Functions](#functions) -- `curry, defensiveCopy, delay, debounce, defer, iterable, lazy, memoize, partial, rearg, throttle, tryCatch`
+    - [Objects](#objects) -- `at, defaults, extend, includes,  mapKeys, mapValues, omit, orderBy, toTuples, toValues`
+    - [Properties](#properties) -- `getterSetter, setterGetter`
+    - [Strings](#strings) -- `cast, escape, pad, padLeft, padRight, repeat, runcate, trim, camelCase, kebabCase, snakeCase, startCase, titleCase, words`
 
 ### Jsonables - JSON Serialization/Deserialization of Classes.
 Jsonable decorators make classes JSON serializable by adding the `toJSON()` method.
@@ -217,14 +231,10 @@ Add these decorators to class methods you want to serialize and deserialize resp
 ##### `@serializeParam ( name?: string, ...transformers: ITransformerResponse[] )`
 ##### `@deserializeParam ( name?: string, ...transformers: ITransformerResponse[] )`
 Add these decorators to constructor parameters you want to serialize and deserialize respectively.
-- `name: string` overrides the default JSON key.
-- `...transformers: ITransformerResponse[]` can affect the JSON value. See below.
 
 ##### `@Json.serializeProperty ( name?: string, ...transformers: ITransformerResponse[] )`
 ##### `@Json.deserializeProperty ( name?: string, ...transformers: ITransformerResponse[] )`
 Add these decorators to class properties (variables) you want to serialize and deserialize respectively.
-- `name: string` overrides the default JSON key.
-- `...transformers: ITransformerResponse[]` can affect the JSON value. See below.
 
 ### Transformers
 Transformers are simple functions that can affect the values of serializable members.
@@ -295,13 +305,12 @@ class MyClass {
 ---
 
 ## Decorators Module
+Class method decorators will allow you modify the behavior and/or return values of your methods. Primarily, this ability is pleasant when it can let the developer (1) avoid boiler-plate code or (2) add obvious functionality.
 
+Ultimately, the goal of the **Decorators** module is to allow developers to create more readable code faster.
 
-
-#### Decorators and Types
-
-TypeScript does not (yet?) support Real-Time-Type-Inference. Meaning: if a decorator changes the return type of a method,
-the TypeScript compiler will expect the original return type, not recognizing the new return type.
+#### A Note on Decorators and Types
+TypeScript does not (yet?) support Decorator-Type-Inference. Meaning: if a decorator changes the return type of a method, the TypeScript compiler will expect the original return type, not recognizing the new return type. Now, since the point of using TypeScript is the benefits of strict typing, we need to solve this.
 
 Here are two "work-arounds" to get around this in a not-too-painful way:
 
@@ -320,36 +329,360 @@ class MyClass {
 }
 
 const myClass = new MyClass();
-let i: number;
-i = myClass.getArray1Sum() as number;
-i = <number>myClass.getArray1Sum();
-i = myClass.getArray2Sum() as any as number;
+let i: number = myClass.getArray1Sum() as number;
+let j: number = <number>myClass.getArray1Sum();
+let k: number = myClass.getArray2Sum() as any as number;
 ```
 
 Personally, I prefer the `getArray1Sum()` example. It at least includes the ultimate return type and any IDE should show it as an option in code hints.
 
-Ultimately, the TypeScript compiler is happy with either work-around. I should confess that I have not tested these work-arounds exhaustively.
+The TypeScript compiler is happy with either work-around. (I should confess that I have not tested these work-arounds exhaustively.)
 
+Let's hope that an official fix (feature) is coming soon.
 
 ### Arrays
 
+The arrays module contains the following decorators:
+`difference, differenceWith, filterTruthy, flatten, fromTuples, intersection, intersectionWith, iterator, mean, reverse, sample, shuffle, sort, sum, takeWhile, union, unionWith, unique, uniqueWith, xor, xorWith, zip, unzip`
+
+**Import Examples:**
+```ts
+import { decoratorName } from "jack-of-all-decorators";
+import { decoratorName } from "jack-of-all-decorators/decorators";
+import { decoratorName } from "jack-of-all-decorators/decorators/arrays";
+```
+
+##### `@difference`
+`difference<T>: (v: T[][]) => T[]`
+
+Creates a new array of array values not included in the other given arrays.
+
+**Example:**
+```ts
+@difference
+public getDifference () {
+    return [[1, 2, 3, 4], [3, 4, 5, 6]];
+}
+// Returns: [1, 2]
+```
+**lodash docs**: https://lodash.com/docs/4.15.0#difference
+
+##### `@differenceWith()`
+`differenceWith<T> (f: (a: T, b: T) => boolean): (v: T[][]) => T[]`
+
+This decorator is like `@difference` except that it accepts comparator which is invoked to compare elements of array to values.
+
+**Example:**
+```ts
+@differenceWith((a: any, b: any) => a.x === b.x)
+public getDifferenceWith() {
+    return [[{x:1}, {x:2}, {x:3}, {x:4}], [{x:3}, {x:4}, {x:5}, {x:6}]];
+}
+// Returns: [{x:1}, {x:2}]
+```
+**lodash docs**: https://lodash.com/docs/4.15.0#differenceWith
+
+##### `@filterTruthy`
+`filterTruthy<T>: (v: T[]) => T[]`
+
+This decorator creates an array with all falsey values removed.
+
+**Example:**
+```ts
+@filterTruthy
+public getTruthy() {
+    return [1, 2, 0, undefined, 3, null, NaN, 4, false, 5];
+}
+// Returns: [1, 2, 3, 4, 5]
+```
+**lodash docs**: https://lodash.com/docs/4.15.0#compact
+
+##### `@flatten`
+`flatten<T>: (v: T[] & T[][]) => T[]`
+
+Recursively flattens array.
+
+**Example:**
+```ts
+@flatten
+public getFlatten () {
+    return [1, 2, [3], [4, [5]]];
+}
+// Returns: [1, 2, 3, 4, 5]
+```
+**lodash docs**: https://lodash.com/docs/4.15.0#flattenDeep
+
+##### `@fromTuples`
+`fromTuples<T>: (v: [string, T][]) => {[key:string]: T}`
+
+The inverse of `toTuples`. This method returns an object composed from key-value pairs.
+
+**Example:**
+```ts
+@fromTuples
+public getFromTuples () {
+    return [["a", 1], ["b", 2], ["c", 3]];
+}
+// Returns: { a: 1, b: 2, c: 3 }
+```
+**lodash docs**: https://lodash.com/docs/4.15.0#fromPairs
+
+##### `@intersection`
+`intersection<T>: (v: T[][]) => T[]`
+
+Creates an array of unique values that are included in all given arrays.
+
+**Example:**
+```ts
+@intersection
+public getIntersection () {
+    return [[1, 2, 3, 4], [3, 4, 5, 6]];
+}
+// Returns: [3, 4]
+```
+**lodash docs**: https://lodash.com/docs/4.15.0#intersection
+
+##### `@intersectionWith()`
+`intersectionWith<T> (f: (a: T, b: T) => boolean): (v: T[][]) => T[]`
+
+This decorator is like `@intersection` except that it accepts comparator which is invoked to compare elements of array to values.
+
+**Example:**
+```ts
+@intersectionWith((a: any, b: any) => a.x === b.x)
+public getIntersectionWith() {
+    return [[{x:1}, {x:2}, {x:3}, {x:4}], [{x:3}, {x:4}, {x:5}, {x:6}]];
+}
+// Returns: [{x:3}, {x:4}]
+```
+**lodash docs**: https://lodash.com/docs/4.15.0#intersectionWith
+
+##### `@iterator`
+`iterator<T>: (v: T[]) => Iterator<T>`
+
+Returns an Iterator of the array. Target must be `ES6` to use `for...of`.
+
+**Example:**
+```ts
+@iterator
+public getIterator() {
+    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+}
+const it = myClass.getIterator();
+for (let i of it) {
+    console.log(i);
+}
+// Returns: 1 2 3 4 5 6 7 8 9 10
+```
+
+##### `@mean`
+`mean<T>: (v: number[]) => number`
+
+Computes the mean of the values in array.
+
+**Example:**
+```ts
+@mean
+public getMean () {
+    return [2, 4, 6, 8, 10, 12];
+}
+// Returns: 7
+```
+**lodash docs**: https://lodash.com/docs/4.15.0#mean
+
+##### `@reverse`
+`reverse<T>: (v: T[]) => T[]`
+
+Reverses to order of items in the given array.
+
+**Example:**
+```ts
+@reverse
+public getReverse () {
+    return [1, 2, 3, 4, 5];
+}
+// Returns: [5, 4, 3, 2, 1]
+```
+**lodash docs**: https://lodash.com/docs/4.15.0#reverse
+
+##### `@sample`
+`sample<T>: (v: T[]) => T`
+
+Gets a random element from collection.
+
+**Example:**
+```ts
+@reverse
+public getSample () {
+    return [1, 2, 3, 4, 5];
+}
+// Returns: 1 || 2 || 3 || 4 || 5
+```
+**lodash docs**: https://lodash.com/docs/4.15.0#reverse
+
+##### `@shuffle`
+`shuffle<T>: (v: T[]) => T[]`
+
+Creates an array of shuffled values, using a version of the Fisher-Yates shuffle.
+
+**Example:**
+```ts
+@shuffle
+public getShuffle () {
+    return [1, 2, 3, 4, 5];
+}
+// Returns: [3, 1, 5, 2, 4]
+```
+**lodash docs**: https://lodash.com/docs/4.15.0#shuffle
+
+##### `@sort`
+`sort<T> (...keys: string[]) => void: (v: T[]) => T[]`
+
+Creates an array of elements, sorted in ascending order by the results of running each element in a collection thru each iteratee.
+
+**Example:**
+```ts
+@sort("x")
+public getSort () {
+    return [{x:7}, {x:2}, {x:6}, {x:8}, {x:3}, {x:4}, {x:1}, {x:5}];
+}
+// Returns: [{x:1}, {x:2}, {x:3}, {x:4}, {x:5}, {x:6}, {x:7}, {x:8}]
+```
+**lodash docs**: https://lodash.com/docs/4.15.0#sortBy
+
+##### `@sum`
+`sum<T>: (v: number[]) => number`
+
+Computes the sum of the values in array.
+
+**Example:**
+```ts
+@sum
+public getSum () {
+    return [1, 2, 3, 4, 5];
+}
+// Returns: 15
+```
+**lodash docs**: https://lodash.com/docs/4.15.0#sum
+
+##### `@takeWhile()`
+
+##### `@union`
+
+##### `@unionWith()`
+
+##### `@unique`
+
+##### `@uniqueWith()`
+
+##### `@xor`
+
+##### `@xorWith()`
+
+##### `@unzip`
+
+##### `@zip`
+
+
 ### Dates
+
+##### `@dateFormat()`
 
 ### Functions
 
+##### `@debounce()`
+
+##### `@curry`
+
+##### `@defer`
+
+##### `@delay()`
+
+##### `@defensiveCopy`
+
+##### `@iterable()`
+
+##### `@lazy`
+
+##### `@memoize`
+
+##### `@partial()`
+
+##### `@rearg()`
+
+##### `@throttle()`
+
+##### `@tryCatch`
+
 ### Objects
+
+##### `@at()`
+
+##### `@defaults()`
+
+##### `@extend()`
+
+##### `@includes`
+
+##### `@mapKeys()`
+
+##### `@mapValues()`
+
+##### `@omit()`
+
+##### `@orderBy()`
+
+##### `@toTuples`
+
+##### `@toValues`
 
 ### Properties
 
+##### `@setterGetter`
+
+##### `@getterSetter`
+
 ### Strings
+
+##### `@cast()`
+
+##### `@escape`
+
+##### `@pad()`
+
+##### `@padLeft()`
+
+##### `@padRight()`
+
+##### `@repeat()`
+
+##### `@truncate()`
+
+##### `@trim`
+
+##### `@camelCase`
+
+##### `@kebabCase`
+
+##### `@snakeCase`
+
+##### `@startCase`
+
+##### `@titleCase`
+
+##### `@words`
 
 ---
 
 ## Special Thanks
 
-lodash
+I stand upon the shoulders of giants
 
-dateformat
+### lodash -- https://github.com/lodash/lodash/
+The **lodash** library is used extensively in the **Decorators** module.
+
+### dateformat -- https://github.com/felixge/node-dateformat
+The **dateformat** library is used by the **dateFormat** decorator.
 
 ---
 
