@@ -47,7 +47,7 @@ export function mapKeys (mapper: (value: any, key: string) => string) {
  * @param mapper
  * @returns {(target:any, propertyKey:string, descriptor:(TypedPropertyDescriptor<()=>Object>|TypedPropertyDescriptor<Object>))=>undefined}
  */
-export function mapValues (mapper: (value: any) => any) {
+export function mapValues (mapper: (value: any, key?: string) => any) {
     return function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<() => Object> | TypedPropertyDescriptor<Object>) {
         return methodFactory<any>((o: Object) => mapValues.call(mapValues, o, mapper), descriptor);
     }
