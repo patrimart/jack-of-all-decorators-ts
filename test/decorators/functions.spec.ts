@@ -3,7 +3,7 @@ import assert = require("assert");
 
 import {
     debounce, curry, defer, delay, defensiveCopy, iterable,
-    lazy, memoize, partial, rearg, throttle, tryCatch,
+    memoize, partial, rearg, throttle, tryCatch,
 } from "../../lib/decorators/functions";
 
 
@@ -44,10 +44,10 @@ class MyTest {
         return Math.random();
     }
 
-    @lazy
-    public getLazy () {
-        return Date.now();
-    }
+    // @lazy
+    // public getLazy () {
+    //     return Date.now();
+    // }
 
     @memoize
     public getMemoize (count: number) {
@@ -85,9 +85,9 @@ describe ("Functions decorators", function () {
 
     it ("debounce", function (done) {
 
-        const i: number = setInterval(() => c.getDebounce(), 30);
+        const i = setInterval(() => c.getDebounce(), 30);
         setTimeout(() => {
-            clearInterval(i);
+            clearInterval(i as any);
             c.getDebounce();
             const count = c.counter;
             // console.log("DEBOUNCE", count);
@@ -134,17 +134,17 @@ describe ("Functions decorators", function () {
 
     it.skip("iterable");
 
-    it ("lazy", function (done) {
-
-        const now = Date.now();
-        const lazyFunc = c.getLazy() as any as Function;
-        setTimeout(() => {
-            if (lazyFunc() < now + 400)
-                done("Lazy is not lazy.");
-            else
-                done();
-        }, 500);
-    });
+    // it ("lazy", function (done) {
+    //
+    //     const now = Date.now();
+    //     const lazyFunc = c.getLazy() as any as Function;
+    //     setTimeout(() => {
+    //         if (lazyFunc() < now + 400)
+    //             done("Lazy is not lazy.");
+    //         else
+    //             done();
+    //     }, 500);
+    // });
 
     it ("memoize", function () {
 
@@ -167,9 +167,9 @@ describe ("Functions decorators", function () {
     it ("throttle", function (done) {
 
         const count = c.counter;
-        const i: number = setInterval(() => c.getThrottle(Math.random()), 10);
+        const i = setInterval(() => c.getThrottle(Math.random()), 10);
         setTimeout(() => {
-            clearInterval(i);
+            clearInterval(i as any);
             if (c.counter > count + 2) done (`Throttle didn't throttle: ${c.counter} > ${count}.`);
             else done();
         }, 200);

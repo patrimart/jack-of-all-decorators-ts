@@ -4,7 +4,6 @@ export declare function defer(target: any, propertyKey: string, descriptor: Type
 export declare function delay(wait: number): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) => void;
 export declare function defensiveCopy(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<any>): void;
 export declare function iterable(limit?: number): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) => void;
-export declare function lazy(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>): void;
 export declare function memoize(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<any>): void;
 export declare function partial(...args: any[]): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) => void;
 export declare function rearg(...indexes: number[]): (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) => void;

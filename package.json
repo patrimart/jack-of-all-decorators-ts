@@ -1,6 +1,6 @@
 {
   "name": "jack-of-all-decorators",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.1-beta.1",
   "description": "Decorator library for TypeScript. Serialize/deserialzie classes to JSON. Decorate methods with lodash, etc.",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",

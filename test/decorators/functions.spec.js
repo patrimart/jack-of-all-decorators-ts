@@ -30,9 +30,6 @@ var MyTest = (function () {
     MyTest.prototype.getIterable = function () {
         return Math.random();
     };
-    MyTest.prototype.getLazy = function () {
-        return Date.now();
-    };
     MyTest.prototype.getMemoize = function (count) {
         return this.counter = count;
     };
@@ -66,9 +63,6 @@ var MyTest = (function () {
     __decorate([
         functions_1.iterable(10)
     ], MyTest.prototype, "getIterable", null);
-    __decorate([
-        functions_1.lazy
-    ], MyTest.prototype, "getLazy", null);
     __decorate([
         functions_1.memoize
     ], MyTest.prototype, "getMemoize", null);
@@ -135,16 +129,6 @@ describe("Functions decorators", function () {
         assert.deepEqual(c.getDefensiveCopy(), [1, 2, 3, 4, 5]);
     });
     it.skip("iterable");
-    it("lazy", function (done) {
-        var now = Date.now();
-        var lazyFunc = c.getLazy();
-        setTimeout(function () {
-            if (lazyFunc() < now + 400)
-                done("Lazy is not lazy.");
-            else
-                done();
-        }, 500);
-    });
     it("memoize", function () {
         var count = c.getMemoize(5);
         c.getMemoize(6);

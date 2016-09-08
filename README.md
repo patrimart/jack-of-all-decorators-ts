@@ -213,7 +213,10 @@ There will be times when your class and JSON object will not so nicely mirror th
 
 To customize JSON serialization, you must explicitly add decorators to all class members you want to serialize. Unlike default configuration, class members with decorators will be seen regardless if they have default values or not.
 
+.
+
 ##### `@Json.Serializable ( configs: IClassConfig )`
+
 The `@Json.Serializable` class decorator can be passed a configuration object with the following properties:
 - `defaultConstruction: string[]` will pass the given values to a class during deserialization.
 - `autoNameGetters: boolean = true` will identify get*/set* methods and pair them. For example `getFoo()` and `setFoo()` from above.
@@ -223,21 +226,33 @@ The `@Json.Serializable` class decorator can be passed a configuration object wi
 - `toKebabCase: boolean = false` will force class members to kebab-case in the JSON.
 - `toSnakeCase: boolean = false` will force class members to snake_case in the JSON.
 
+.
+
 ##### `@serializeMethod ( name?: string, ...transformers: ITransformerResponse[] )`
 ##### `@deserializeMethod ( name?: string, ...transformers: ITransformerResponse[] )`
+
 Add these decorators to class methods you want to serialize and deserialize respectively.
+
 - `name: string` overrides the default JSON key.
 - `...transformers: ITransformerResponse[]` can affect the JSON value. See below.
 
+
 ##### `@serializeParam ( name?: string, ...transformers: ITransformerResponse[] )`
 ##### `@deserializeParam ( name?: string, ...transformers: ITransformerResponse[] )`
+
 Add these decorators to constructor parameters you want to serialize and deserialize respectively.
+
+.
 
 ##### `@Json.serializeProperty ( name?: string, ...transformers: ITransformerResponse[] )`
 ##### `@Json.deserializeProperty ( name?: string, ...transformers: ITransformerResponse[] )`
+
 Add these decorators to class properties (variables) you want to serialize and deserialize respectively.
 
+.
+
 ### Transformers
+
 Transformers are simple functions that can affect the values of serializable members.
 - `Json.transformers.DefaultValue ( value: any )` will replace `undefined` with the given value.
 - `Json.transformers.OverrideValue ( value: any )` will change any value to the given value.
@@ -299,7 +314,7 @@ class MyClass {
 ```
 **Note: Any class members without a decorator will not be serialized/deserialized.**
 
-##### Deserialization Notes
+#### Deserialization Notes
 - Deserialization does NOT invoke class constructors. Unless, `@Json.Serializable` has been configured with `defaultConstruction` or `Json.Serializer.deserialize()` is passed constructor param values.
 - Deserialization DOES invoke setters and methods. This is unavoidable.
 
@@ -311,10 +326,10 @@ Class method decorators will allow you modify the behavior and/or return values 
 
 Ultimately, the goal of the **Decorators** module is to allow developers to create more readable code faster.
 
-### Compund Decorators
+### Compound Decorators
 It is possible (and desirable) to put more than one decorator on a method. The order in which the decorators are applied to the return value can be critical in many combinations.
 
-**Execuition order is from bottom-to-top!** If it helps, think of the value leaving the method and rising up through the decorators.
+**Execution order is from bottom-to-top!** If it helps, think of the value leaving the method and rising up through the decorators.
 
 **In this example, the value "string" will hit decorators `@a()`, `@b()` and `@c()` in that order:**
 ```ts
@@ -368,8 +383,8 @@ import { decoratorName } from "jack-of-all-decorators";
 import { decoratorName } from "jack-of-all-decorators/decorators";
 import { decoratorName } from "jack-of-all-decorators/decorators/arrays";
 ```
-
-##### `@difference`
+.
+#### `@difference`
 `difference<T>: (v: T[][]) => T[]`
 
 Creates a new array of array values not included in the other given arrays.
@@ -384,7 +399,8 @@ public getDifference () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#difference
 
-##### `@differenceWith()`
+.
+#### `@differenceWith()`
 `differenceWith<T> (f: (a: T, b: T) => boolean): (v: T[][]) => T[]`
 
 This decorator is like `@difference` except that it accepts comparator which is invoked to compare elements of array to values.
@@ -399,7 +415,8 @@ public getDifferenceWith() {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#differenceWith
 
-##### `@filterTruthy`
+.
+#### `@filterTruthy`
 `filterTruthy<T>: (v: T[]) => T[]`
 
 This decorator creates an array with all falsey values removed.
@@ -414,7 +431,8 @@ public getTruthy() {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#compact
 
-##### `@flatten`
+.
+#### `@flatten`
 `flatten<T>: (v: T[] & T[][]) => T[]`
 
 Recursively flattens array.
@@ -429,7 +447,8 @@ public getFlatten () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#flattenDeep
 
-##### `@fromTuples`
+.
+#### `@fromTuples`
 `fromTuples<T>: (v: [string, T][]) => {[key:string]: T}`
 
 The inverse of `toTuples`. This method returns an object composed from key-value pairs.
@@ -444,7 +463,8 @@ public getFromTuples () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#fromPairs
 
-##### `@intersection`
+.
+#### `@intersection`
 `intersection<T>: (v: T[][]) => T[]`
 
 Creates an array of unique values that are included in all given arrays.
@@ -459,7 +479,8 @@ public getIntersection () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#intersection
 
-##### `@intersectionWith()`
+.
+#### `@intersectionWith()`
 `intersectionWith<T> (f: (a: T, b: T) => boolean): (v: T[][]) => T[]`
 
 This decorator is like `@intersection` except that it accepts comparator which is invoked to compare elements of array to values.
@@ -474,7 +495,8 @@ public getIntersectionWith() {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#intersectionWith
 
-##### `@iterator`
+.
+#### `@iterator`
 `iterator<T>: (v: T[]) => Iterator<T>`
 
 Returns an Iterator of the array. Target must be `ES6` to use `for...of`.
@@ -492,7 +514,8 @@ for (let i of it) {
 // Returns: 1 2 3 4 5 6 7 8 9 10
 ```
 
-##### `@mean`
+.
+#### `@mean`
 `mean<T>: (v: number[]) => number`
 
 Computes the mean of the values in array.
@@ -507,7 +530,8 @@ public getMean () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#mean
 
-##### `@reverse`
+.
+#### `@reverse`
 `reverse<T>: (v: T[]) => T[]`
 
 Reverses to order of items in the given array.
@@ -522,7 +546,8 @@ public getReverse () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#reverse
 
-##### `@sample`
+.
+#### `@sample`
 `sample<T>: (v: T[]) => T`
 
 Gets a random element from collection.
@@ -537,7 +562,8 @@ public getSample () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#reverse
 
-##### `@shuffle`
+.
+#### `@shuffle`
 `shuffle<T>: (v: T[]) => T[]`
 
 Creates an array of shuffled values, using a version of the Fisher-Yates shuffle.
@@ -552,7 +578,8 @@ public getShuffle () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#shuffle
 
-##### `@sort`
+.
+#### `@sort`
 `sort<T> (...keys: string[]) => void: (v: T[]) => T[]`
 
 Creates an array of elements, sorted in ascending order by the results of running each element in a collection thru each iteratee.
@@ -567,7 +594,8 @@ public getSort () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#sortBy
 
-##### `@sum`
+.
+#### `@sum`
 `sum<T>: (v: number[]) => number`
 
 Computes the sum of the values in array.
@@ -582,7 +610,8 @@ public getSum () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#sum
 
-##### `@takeWhile()`
+.
+#### `@takeWhile()`
 `takeWhile<T> (p: T[]) => boolean: (v: T[]) => T[]`
 
 Creates a slice of array with elements taken from the beginning. Elements are taken until predicate returns false.
@@ -597,7 +626,8 @@ public getTakeWhile () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#takeWhile
 
-##### `@union`
+.
+#### `@union`
 `union<T>: (a: T[][]) => T[]`
 
 Creates an array of unique values, in order, from all given arrays.
@@ -612,7 +642,8 @@ public getUnion () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#union
 
-##### `@unionWith()`
+.
+#### `@unionWith()`
 `unionWith<T> (c: (a: T, b: T) => boolean): (a: T[][]) => T[]`
 
 This decorator is like `@union` except that it accepts a comparator which is invoked to compare elements of arrays.
@@ -627,7 +658,8 @@ public getUnionWith () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#unionWith
 
-##### `@unique`
+.
+#### `@unique`
 `unique<T>: (a: T[][]) => T[]`
 
 Creates a duplicate-free version of an array in which only the first occurrence of each element is kept.
@@ -642,7 +674,8 @@ public getUnique () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#uniq
 
-##### `@uniqueWith()`
+.
+#### `@uniqueWith()`
 `uniqueWith<T> (c: (a: T, b: T) => boolean): (a: T[][]) => T[]`
 
 This decorator is like `@unique` except that it accepts comparator which is invoked to compare elements of array.
@@ -657,7 +690,8 @@ public getUniqueWith () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#uniqWith
 
-##### `@xor`
+.
+#### `@xor`
 `xor<T>: (a: T[][]) => T[]`
 
 Creates an array of unique values that is the symmetric difference of the given arrays.
@@ -672,7 +706,8 @@ public getXor () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#xor
 
-##### `@xorWith()`
+.
+#### `@xorWith()`
 `xorWith<T> (c: (a: T, b: T) => boolean): (a: T[][]) => T[]`
 
 This decorator like `@xor` except that it accepts comparator which is invoked to compare elements of arrays.
@@ -687,7 +722,8 @@ public getXorWith () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#xorWith
 
-##### `@unzip`
+.
+#### `@unzip`
 `unzip<T>: (a: T[][]) => T[][]`
 
 This decorator is like `@zip` except that it accepts an array of grouped elements and creates an array regrouping the elements to their pre-zip configuration.
@@ -702,7 +738,8 @@ public getUnzip () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#unzip
 
-##### `@zip`
+.
+#### `@zip`
 `zip<T>: (a: T[][]) => T[][]`
 
 Creates an array of grouped elements, the first of which contains the first elements of the given arrays, the second of which contains the second elements of the given arrays, and so on.
@@ -717,6 +754,7 @@ public getZip () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#zip
 
+---
 
 ### Dates
 
@@ -730,7 +768,8 @@ import { dateFormat } from "jack-of-all-decorators/decorators";
 import { dateFormat } from "jack-of-all-decorators/decorators/dates";
 ```
 
-##### `@dateFormat()`
+.
+#### `@dateFormat()`
 `dateFormat<T> (f: string): (d: Date) => string`
 
 Formats a Date object into a string.
@@ -745,6 +784,7 @@ public getDate () {
 ```
 **dataformat docs**: https://github.com/felixge/node-dateformat
 
+---
 
 ### Functions
 
@@ -758,8 +798,8 @@ import { decoratorName } from "jack-of-all-decorators/decorators";
 import { decoratorName } from "jack-of-all-decorators/decorators/functions";
 ```
 
-
-##### `@debounce()`
+.
+#### `@debounce()`
 `debounce (wait: number, maxWait = wait * 4, leading = true, trailing = ! leading): () => void`
 
 Creates a debounced function that delays invoking func until after wait milliseconds have elapsed since the last time the debounced function was invoked. See the **lodash** docs for more.
@@ -771,7 +811,8 @@ public callDebounce () { ... }
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#debounce
 
-##### `@curry`
+.
+#### `@curry`
 `curry<T>: (...a: any[]) => (...a: any[]) => T`
 
 Creates a method that accepts arguments and either invokes returning its result, if at least arity number of arguments have been provided, or returns a function that accepts the remaining func arguments, and so on.
@@ -789,7 +830,8 @@ myCLass.callCurry("a")("b")("c")("d");
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#curry
 
-##### `@defer`
+.
+#### `@defer`
 `defer<T>: (...a: T[]) => void`
 
 Defers invoking the method until the current call stack has cleared. Basically, wraps the method in `setImmediate()`.
@@ -801,7 +843,8 @@ public callDefer () { ... }
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#defer
 
-##### `@delay()`
+.
+#### `@delay()`
 `delay (wait: number): (...any[]) => void`
 
 Invokes method after `wait` milliseconds.
@@ -813,7 +856,8 @@ public callDelay () { ... }
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#delay
 
-##### `@defensiveCopy`
+.
+#### `@defensiveCopy`
 `defensiveCopy<T>: (...any[]) => T`
 
 Makes a deep copy of the return value.
@@ -828,10 +872,11 @@ public callDefensiveCopy (): Date {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#cloneDeep
 
-##### `@iterable()`
+.
+#### `@iterable()`
 `iterable<T> (limit = Number.MAX_SAFE_INTEGER): (...any[]) => Iterator<T>`
 
-Turns a method into an Iterable<T>, invoking it on each iteration. Requires target `ES6` to use with `for...of`.
+Turns a method into an Iterable\<T>, invoking it on each iteration. Requires target `ES6` to use with `for...of`.
 
 **Example:**
 ```ts
@@ -849,7 +894,8 @@ for (const rand of it) {
 ```
 **Learn More:** https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators
 
-##### `@memoize`
+.
+#### `@memoize`
 `memoize<T>: (...any[]) => T`
 
 Creates a method that memoizes the result of the first invocation. Subsequent invocations return the same result with no side effects.
@@ -864,7 +910,8 @@ public getMemoize (count: number) {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#cloneDeep
 
-##### `@partial()`
+.
+#### `@partial()`
 `partial<T> (...a: any[]): (b: any) => T`
 
 Creates a method that invokes with partials prepended to the arguments it receives.
@@ -882,7 +929,8 @@ myCLass.callPartial("d");
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#partial
 
-##### `@rearg()`
+.
+#### `@rearg()`
 `rearg<T> (...n: number[]): (...any[]) => T`
 
 Creates a method that invokes with arguments arranged according to the specified indexes.
@@ -900,7 +948,8 @@ myClass.getReArg("a", "b", "c", "d")
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#rearg
 
-##### `@throttle()`
+.
+#### `@throttle()`
 `throttle (wait: number, leading = true, trailing = ! leading): (...any[]) => void`
 
 Creates a throttled method that only invokes at most once per every `wait` milliseconds. See docs for more.
@@ -912,7 +961,8 @@ public callThrottle () {...}
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#throttle
 
-##### `@tryCatch`
+.
+#### `@tryCatch`
 `tryCatch<T>: (...any[]) => T`
 
 Wraps the method in a `try...catch()` block. Returns `undefined` if an error is thrown.
@@ -925,6 +975,8 @@ public getTryCatch () {
 }
 // Returns: undefined
 ```
+
+---
 
 
 ### Objects
@@ -939,7 +991,8 @@ import { decoratorName } from "jack-of-all-decorators/decorators";
 import { decoratorName } from "jack-of-all-decorators/decorators/objects";
 ```
 
-##### `@at()`
+.
+#### `@at()`
 `at (...a: string[]): (o: Object) => any[]`
 
 Creates an array of values corresponding to paths of object.
@@ -954,7 +1007,8 @@ public getAt () {
 ```
 **lodash docs:** https://lodash.com/docs/4.15.0#at
 
-##### `@defaults()`
+.
+#### `@defaults()`
 `defaults<T extends Object> (...s: Object[]): (o: Object) => T`
 
 Assigns own and inherited enumerable string keyed properties of source objects to the destination object for all destination properties that resolve to undefined. Source objects are applied from left to right. Once a property is set, additional values of the same property are ignored.
@@ -969,7 +1023,8 @@ public getDefaults () {
 ```
 **lodash docs:** https://lodash.com/docs/4.15.0#defaults
 
-##### `@extend()`
+.
+#### `@extend()`
 `extend<T extends Object> (...s: Object[]): (o: Object) => T`
 
 Assigns own enumerable string keyed properties of source objects to the destination object. Source objects are applied from left to right. Subsequent sources overwrite property assignments of previous sources.
@@ -984,7 +1039,8 @@ public getExtend() {
 ```
 **lodash docs:** https://lodash.com/docs/4.15.0#assign
 
-##### `@includes()`
+.
+#### `@includes()`
 `includes<T extends any[] | Object | string> (searchValue: any, offset = 0): (o: T) => T`
 
 Checks if value is in collection. If collection is a string, it's checked for a substring of value. If `offset` is negative, it's used as the offset from the end of collection.
@@ -999,7 +1055,8 @@ public getIncludesObj () {
 ```
 **lodash docs:** https://lodash.com/docs/4.15.0#includes
 
-##### `@mapKeys()`
+.
+#### `@mapKeys()`
 `mapKeys (i: (v: any, k: string) => string): (o: Object) => Object`
 
 The opposite of `@mapValues`. This decorator creates an `Object` with the same values as `o` and keys transformed by the iteratee.
@@ -1014,7 +1071,8 @@ public getMapKeys () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#mapKeys
 
-##### `@mapValues()`
+.
+#### `@mapValues()`
 `mapKeys (i: (v: any, k?: string) => any): (o: Object) => Object`
 
 The opposite of `@mapKeys`. This decorator creates an `Object` with the same keys as `o` and values transformed by the iteratee.
@@ -1029,7 +1087,8 @@ public getMapValues () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#mapValues
 
-##### `@omit()`
+.
+#### `@omit()`
 `omit (p: (v: any, k?: string) => boolean): (o: Object) => Object`
 
 `omit (...keys: string[]): (o: Object) => Object`
@@ -1053,7 +1112,8 @@ public getOmit2 () {
 
 **lodash docs**: https://lodash.com/docs/4.15.0#omitBy
 
-##### `@orderBy()`
+.
+#### `@orderBy()`
 `orderBy<T> (keys: string, order: string): (a: T[]) => T[]`
 
 This decorator orders an array of objects by key. `keys` is a space-delimited list. `order` is a space-delimited list of order direction: `asc` or `desc`.
@@ -1068,7 +1128,8 @@ public getOrderBy () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#orderBy
 
-##### `@toTuples`
+.
+#### `@toTuples`
 `toTuples<T>: (o: {[key:string]: T) => [string, T][]`
 
 The opposite of `fromTuples`. This decorator transforms an object into an array of key/value pairs.
@@ -1083,7 +1144,8 @@ public getToTuples () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#toPairsIn
 
-##### `@toValues`
+.
+#### `@toValues`
 `toValues<T>: (o: {[key:string]: T) => T[]`
 
 The opposite of `Object.keys()`. This decorator returns the Object values as an array.
@@ -1098,6 +1160,7 @@ public getToValues () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#valuesIn
 
+---
 
 ### Properties
 
@@ -1111,7 +1174,8 @@ import { getterSetter, setterGetter } from "jack-of-all-decorators/decorators";
 import { getterSetter, setterGetter } from "jack-of-all-decorators/decorators/properties";
 ```
 
-##### `@getterSetter()`
+.
+#### `@getterSetter()`
 `getterSetter<T> (...decorators: any[]): () => T`
 
 This decorator converts the class property into a getter/setter. Optionally, other decorators can applied to the getter. Choose `@getterSetter` if "gets" will be less than "sets" on this variable.
@@ -1128,7 +1192,8 @@ class MyClass {
 // Returns: ["getter", "a", "is", "This"]
 ```
 
-##### `@setterGetter()`
+.
+#### `@setterGetter()`
 `setterGetter<T> (...decorators: any[]): () => T`
 
 This decorator converts the class property into a getter/setter. Optionally, other decorators can applied to the setter. Choose `@setterGetter` if "gets" will be more than "sets" on this variable.
@@ -1145,6 +1210,7 @@ class MyClass {
 // Returns: ["setter", "a", "is", "this", "And"]
 ```
 
+---
 
 ### Strings
 
@@ -1158,7 +1224,8 @@ import { decoratorName } from "jack-of-all-decorators/decorators";
 import { decoratorName } from "jack-of-all-decorators/decorators/strings";
 ```
 
-##### `@cast()`
+.
+#### `@cast()`
 `cast<T> (c: (v: string) => T): (v: string) => T`
 
 This decorator applies a function to the return value.
@@ -1181,9 +1248,10 @@ public getCastCustom () {
 }
 // Returns: "prefix1234"
 ```
-**lodash docs**: https://lodash.com/docs/4.15.0#orderBy
 
-##### `@escape`
+
+.
+#### `@escape`
 `escape: (s: string) => string`
 
 Converts the characters "&", "<", ">", '"', "'", and "`" in string to their corresponding HTML entities.
@@ -1198,7 +1266,8 @@ public getEscape () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#escape
 
-##### `@pad()`
+.
+#### `@pad()`
 `pad (len: number, chars = ""): (v: string) => string`
 
 Pads `string` on the left and right sides if it's shorter than length. Padding characters are truncated if they can't be evenly divided by length.
@@ -1213,7 +1282,8 @@ public getPad () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#pad
 
-##### `@padLeft()`
+.
+#### `@padLeft()`
 `padLeft (len: number, chars = ""): (v: string) => string`
 
 Pads `string` on the left side if it's shorter than length. Padding characters are truncated if they exceed length.
@@ -1228,7 +1298,8 @@ public getPadLeft () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#padStart
 
-##### `@padRight()`
+.
+#### `@padRight()`
 `padRight (len: number, chars = ""): (v: string) => string`
 
 Pads `string` on the right side if it's shorter than length. Padding characters are truncated if they exceed length.
@@ -1243,7 +1314,8 @@ public getPadRight () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#padStart
 
-##### `@repeat()`
+.
+#### `@repeat()`
 `repeat (n: number): (v: string) => string`
 
 Repeats the string `n` times.
@@ -1258,7 +1330,8 @@ public getRepeat () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#repeat
 
-##### `@truncate()`
+.
+#### `@truncate()`
 `truncate (length: number, omission = "...", separator: RegExp | string = " "): (v: string) => string`
 
 Truncates `string` if it's longer than the given maximum string length. The last characters of the truncated string are replaced with the omission string.
@@ -1273,7 +1346,8 @@ public getTruncate () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#truncate
 
-##### `@trim`
+.
+#### `@trim`
 `trim: (s: string) => string`
 
 Removes leading and trailing whitespace.
@@ -1288,7 +1362,8 @@ public getTrim () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#trim
 
-##### `@words`
+.
+#### `@words`
 `words: (s: string) => string[]`
 
 Splits string into an array of its words.
@@ -1303,7 +1378,8 @@ public getWords () {
 ```
 **lodash docs**: https://lodash.com/docs/4.15.0#words
 
-##### `@camelCase @kebabCase @snakeCase @startCase @titleCase`
+.
+#### `@camelCase @kebabCase @snakeCase @startCase @titleCase`
 `____Case: (s: string) => string`
 
 Converts string to the specified case.

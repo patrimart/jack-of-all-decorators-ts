@@ -78,14 +78,14 @@ export function iterable (limit = Number.MAX_SAFE_INTEGER) {
 }
 
 
-export function lazy (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
-    return methodFactoryBind<any>(function (func: Function) {
-        let cache: any;
-        return function (...a: any[]) {
-            return cache || (cache = func.bind(this, ...a));
-        };
-    }, propertyKey, descriptor);
-}
+// export function lazy (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
+//     return methodFactoryBind<any>(function (func: Function) {
+//         let cache: any;
+//         return function (...a: any[]) {
+//             return cache || (cache = func.bind(this, ...a));
+//         };
+//     }, propertyKey, descriptor);
+// }
 
 
 export function memoize (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) {

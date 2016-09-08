@@ -1,6 +1,6 @@
 
 import {
-    curry, defensiveCopy, debounce, defer, delay, iterable, lazy,
+    curry, defensiveCopy, debounce, defer, delay, iterable, // lazy,
     memoize, partial, rearg, throttle, tryCatch
 } from "./functions";
 import {
@@ -31,7 +31,7 @@ export {
     debounce,
     defer,
     iterable,
-    lazy,
+    // lazy,
     memoize,
     partial,
     rearg,
