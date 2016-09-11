@@ -236,6 +236,7 @@ Add these decorators to class methods you want to serialize and deserialize resp
 - `name: string` overrides the default JSON key.
 - `...transformers: ITransformerResponse[]` can affect the JSON value. See below.
 
+.
 
 ##### `@serializeParam ( name?: string, ...transformers: ITransformerResponse[] )`
 ##### `@deserializeParam ( name?: string, ...transformers: ITransformerResponse[] )`
