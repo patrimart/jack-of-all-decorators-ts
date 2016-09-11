@@ -1,4 +1,5 @@
 
+import {DI_MAP} from "./module";
 export namespace DI {
 
 

@@ -1,6 +1,6 @@
 
 import {
-    DI_CLASS_ID, DI_MAP, DIMap, IDependency, IInjectable, getInjectablesByModule,
+    DI_CLASS_ID, DI_MAP, IDependency, IInjectable, getInjectablesByModule, getInjectablesByClass,
 } from "./module";
 
 
@@ -10,11 +10,11 @@ import {
  * @param {string} [module="global"] - the module path to register the class under.
  * @param {boolean} [autoDestructor=true] - should the class' destruct() be called when no instances in use?
  */
-export function register (clazz: IInjectable & FunctionConstructor, module = "global", autoDestructor = true): void {
+export function register (clazz: any, module = "global", autoDestructor = true): void {
 
     // TODO Validate module path.
 
-    const classId = clazz.DI_CLASS_ID || Date.now().toString(36) + "-" + Math.round(Math.random() * Number.MAX_SAFE_INTEGER).toString(36);
+    const classId = clazz[DI_CLASS_ID] || Date.now().toString(36) + "-" + Math.round(Math.random() * Number.MAX_SAFE_INTEGER).toString(36);
     const modPath = module.split(".");
     const dep: IDependency = {
         instance: null,
@@ -25,7 +25,7 @@ export function register (clazz: IInjectable & FunctionConstructor, module = "gl
     };
 
     // If class previously registered, check if already at the module path.
-    if (clazz.DI_CLASS_ID !== undefined) {
+    if (clazz[DI_CLASS_ID] !== undefined) {
 
         try {
             getInjectablesByModule(module, clazz);
@@ -38,17 +38,19 @@ export function register (clazz: IInjectable & FunctionConstructor, module = "gl
     }
 
     // Create a copy of the Class to preserve original destruct().
-    const clazzCopy = Object.create(clazz.prototype);
-    clazzCopy.prototype.constructor = clazz;
+    const DepInjCopy = eval(`( ${clazz} )`);
+    // DepInjCopy.prototype = Object.assign({}, clazz.prototype);
+    DepInjCopy.prototype = Object.create(clazz.prototype);
+    DepInjCopy.prototype.constructor = clazz;
 
     // Assign the same unique ID to the Class copy object.
-    Object.defineProperty(clazzCopy, DI_CLASS_ID as any, { value: classId });
+    Object.defineProperty(DepInjCopy, DI_CLASS_ID as any, { value: classId });
 
     // If auto-destructor, override the original destruct() with counter and auto-destruct.
-    const origDestruct = clazzCopy.prototype["destruct"];
+    const origDestruct = DepInjCopy.prototype["destruct"];
     if (autoDestructor) {
 
-        Object.defineProperty(clazzCopy.prototype, "destruct", {
+        Object.defineProperty(DepInjCopy.prototype, "destruct", {
             value: function () {
 
                 dep.count = Math.max(0, dep.count - 1);
@@ -62,7 +64,14 @@ export function register (clazz: IInjectable & FunctionConstructor, module = "gl
         });
     }
 
-    dep.clazz = clazzCopy;
+    // console.log("DI_CLASS_ID", clazz[DI_CLASS_ID]);
+    // console.log("DI_CLASS_ID", DepInjCopy[DI_CLASS_ID]);
+    // console.log("A", String(DepInjCopy));
+    // console.log("B", DepInjCopy.prototype);
+    // const copy = new DepInjCopy();
+    // copy.destruct();
+
+    dep.clazz = DepInjCopy;
     dep.destructor = () => {
         if (dep.instance) {
             origDestruct.call(dep.instance);
@@ -71,24 +80,54 @@ export function register (clazz: IInjectable & FunctionConstructor, module = "gl
         }
     };
 
-    DI_MAP.push( [ clazzCopy[DI_CLASS_ID], modPath, dep]);
+    DI_MAP.push([DepInjCopy[DI_CLASS_ID], modPath, dep]);
+    // console.log(DI_MAP);
 }
 
-
-export function unregister (clazz: IInjectable, module = "global", withDestruct = true): void {
+/**
+ * Remove registered dependencies by Class and module. Optionally call destruct().
+ * @param {*} clazz - the Class fo the dependencies to unregister.
+ * @param {string} [module="global"] - the module path to find the dependency.
+ * @param {boolean} [withDestruct=true] - if true, destruct() will be invoked.
+ * @throws {ReferenceError} Throws when no dependencies are found.
+ */
+export function unregister (clazz: any, module = "global", withDestruct = true): void {
 
     // TODO Validate module path.
 
-    try {
-        // Find Class objects under given module path.
-        getInjectablesByModule(module, clazz).forEach(di => {
-            // Remove from DI_MAP.
-            DI_MAP.slice(DI_MAP.indexOf(di));
-            // Cleanup the removed Class.
-            if (withDestruct) {
-                di[2].destructor();
-            }
-        });
+    // Find Class objects under given module path.
+    getInjectablesByModule(module, clazz).forEach(di => {
+        // Remove from DI_MAP.
+        // console.log("REMOVE =>", DI_MAP.indexOf(di));
+        DI_MAP.splice(DI_MAP.indexOf(di), 1);
+        // Cleanup the removed Class.
+        if (withDestruct) {
+            di[2].destructor();
+        }
+    });
+}
 
-    } catch (err) { /* Fail silently */ }
+/**
+ * Returns the number of registered dependencies.
+ * @param {*} [clazz] - the Class fo the dependencies.
+ * @param {string} [module] - the module path to find the dependency.
+ * @returns {number} the number of dependencies.
+ */
+export function numRegistered (clazz?: any, module?: string): number {
+
+    try {
+
+        if (clazz === undefined && module === undefined) {
+            return DI_MAP.length;
+        }
+
+        if (clazz !== undefined && module === undefined) {
+            return getInjectablesByClass(clazz).length;
+        }
+
+        return getInjectablesByModule(module, clazz).length;
+
+    } catch (err) {
+        return 0;
+    }
 }

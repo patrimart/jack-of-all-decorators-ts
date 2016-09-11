@@ -1,3 +1,3 @@
-import { IInjectable } from "./module";
-export declare function register(clazz: IInjectable & FunctionConstructor, module?: string, autoDestructor?: boolean): void;
-export declare function unregister(clazz: IInjectable, module?: string, withDestruct?: boolean): void;
+export declare function register(clazz: any, module?: string, autoDestructor?: boolean): void;
+export declare function unregister(clazz: any, module?: string, withDestruct?: boolean): void;
+export declare function numRegistered(clazz?: any, module?: string): number;

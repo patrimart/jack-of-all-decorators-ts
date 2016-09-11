@@ -9,3 +9,4 @@ require("./jsonables/default.spec");
 require("./jsonables/explicit.spec");
 require("./jsonables/configs.spec");
 require("./jsonables/transformers.spec");
+require("./dependency-injection/register.spec");

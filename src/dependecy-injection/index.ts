@@ -8,4 +8,5 @@ export namespace DI {
 
     export const register = Register.register;
     export const unregister = Register.unregister;
+    export const numRegistered = Register.numRegistered;
 }

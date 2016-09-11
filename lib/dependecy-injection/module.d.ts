@@ -3,15 +3,14 @@ export declare type DIMap = [string, string[], IDependency];
 export declare const DI_MAP: DIMap[];
 export interface IInjectable {
     DI_CLASS_ID?: string;
-    destruct(): () => void;
+    destruct(): void;
 }
 export interface IDependency {
     instance: IInjectable;
-    clazz: IInjectable;
+    clazz: any;
     autoDestructor: boolean;
     count: number;
-    destructor: () => void;
+    destructor(): void;
 }
-export declare function getInjectablesByClass(clazz: IInjectable): DIMap[];
-export declare function getInjectablesByModule(module: string, clazz?: IInjectable): DIMap[];
-export declare function serialize(): string;
+export declare function getInjectablesByClass(clazz: any): DIMap[];
+export declare function getInjectablesByModule(module: string, clazz?: any): DIMap[];
