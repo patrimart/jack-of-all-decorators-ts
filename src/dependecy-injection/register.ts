@@ -1,87 +1,106 @@
 
 import {
-    DI_CLASS_ID, DI_MAP, IDependency, IInjectable, getInjectablesByModule, getInjectablesByClass,
+    DI_CLASS_ID, DI_MAP,
+    IDependency, Injectable,
+    getInjectablesByModule, getInjectablesByClass,
 } from "./module";
 
 
 /**
  * Register a Class as a dependency with optional module path and auto-destructor.
- * @param {IInjectable & FunctionConstructor} clazz - the Class to register.
+ * @param {Injectable & FunctionConstructor} clazz - the Class to register.
  * @param {string} [module="global"] - the module path to register the class under.
- * @param {boolean} [autoDestructor=true] - should the class' destruct() be called when no instances in use?
+ * @param {boolean} [selfDestruct=true] - should the class' destruct() be called when no instances in use?
  */
-export function register (clazz: any, module = "global", autoDestructor = true): void {
+export function register (clazz: any, module = "global", selfDestruct = true): IDependency {
 
     // TODO Validate module path.
 
     const classId = clazz[DI_CLASS_ID] || Date.now().toString(36) + "-" + Math.round(Math.random() * Number.MAX_SAFE_INTEGER).toString(36);
-    const modPath = module.split(".");
+    const modPath = module.trim().split(".");
     const dep: IDependency = {
         instance: null,
-        clazz: null,
-        autoDestructor: autoDestructor,
+        clazz: clazz,
         count: 0,
-        destructor: () => {},
+        dependencies: [],
+        selfDestruct: selfDestruct,
+        destructor: null,
     };
 
     // If class previously registered, check if already at the module path.
     if (clazz[DI_CLASS_ID] !== undefined) {
 
         try {
-            getInjectablesByModule(module, clazz);
-            return;
-        } catch (err) { /* Continue. No class found at that module path. */ }
+            return getInjectablesByModule(module, clazz)[0][2];
+        } catch (err) {
+            try {
+                const regDep = getInjectablesByClass(clazz)[0][2];
+                dep.dependencies = regDep.dependencies.slice(0);
+            } catch (err2) { /* Nothing found. Go ahead and register. */ }
+        }
 
     } else {
         // Assign unique ID to the Class object.
         Object.defineProperty(clazz, DI_CLASS_ID as any, { value: classId });
     }
 
-    // Create a copy of the Class to preserve original destruct().
-    const DepInjCopy = eval(`( ${clazz} )`);
-    // DepInjCopy.prototype = Object.assign({}, clazz.prototype);
-    DepInjCopy.prototype = Object.create(clazz.prototype);
-    DepInjCopy.prototype.constructor = clazz;
+    DI_MAP.push([classId, modPath, dep]);
 
-    // Assign the same unique ID to the Class copy object.
-    Object.defineProperty(DepInjCopy, DI_CLASS_ID as any, { value: classId });
+    return dep;
 
-    // If auto-destructor, override the original destruct() with counter and auto-destruct.
-    const origDestruct = DepInjCopy.prototype["destruct"];
-    if (autoDestructor) {
-
-        Object.defineProperty(DepInjCopy.prototype, "destruct", {
-            value: function () {
-
-                dep.count = Math.max(0, dep.count - 1);
-
-                if (dep.count === 0 && dep.instance) {
-                    origDestruct.call(dep.instance);
-                    dep.instance = null;
-                    return;
-                }
-            }
-        });
-    }
-
-    // console.log("DI_CLASS_ID", clazz[DI_CLASS_ID]);
-    // console.log("DI_CLASS_ID", DepInjCopy[DI_CLASS_ID]);
-    // console.log("A", String(DepInjCopy));
-    // console.log("B", DepInjCopy.prototype);
-    // const copy = new DepInjCopy();
-    // copy.destruct();
-
-    dep.clazz = DepInjCopy;
-    dep.destructor = () => {
-        if (dep.instance) {
-            origDestruct.call(dep.instance);
-            dep.instance = null;
-            dep.count = 0;
-        }
-    };
-
-    DI_MAP.push([DepInjCopy[DI_CLASS_ID], modPath, dep]);
-    // console.log(DI_MAP);
+    // // Create a copy of the Class to preserve original destruct().
+    // const DepInjCopy = eval(`( ${clazz} )`);
+    // Object.getOwnPropertySymbols(clazz).forEach(s => DepInjCopy[s] = clazz[s]);
+    // DepInjCopy.prototype = Object.create(clazz.prototype);
+    // // DepInjCopy.prototype.constructor = clazz;
+    //
+    // // Assign the same unique ID to the Class copy object.
+    // // Object.defineProperty(DepInjCopy, DI_CLASS_ID as any, { value: classId });
+    // // Assign the module path to the class.
+    // Object.defineProperty(DepInjCopy, DI_CLASS_MODULE as any, { value: module });
+    //
+    // // If auto-destructor, override the original destruct() with counter and auto-destruct.
+    // const origDestruct = (DepInjCopy.prototype as any)["destruct"];
+    // if (selfDestruct) {
+    //
+    //     Object.defineProperty(DepInjCopy.prototype, "destruct", {
+    //         enumerable: true,
+    //         value: function () {
+    //
+    //             dep.count = Math.max(0, dep.count - 1);
+    //
+    //             if (dep.count === 0 && dep.instance) {
+    //                 origDestruct.call(this);
+    //                 dep.instance = null;
+    //                 return;
+    //             }
+    //         }
+    //     });
+    // }
+    //
+    // // console.log(clazz === DepInjCopy);
+    // // console.log("DI_CLASS_ID", clazz[DI_CLASS_ID]);
+    // // console.log("DI_CLASS_ID", DepInjCopy[DI_CLASS_ID]);
+    // // console.log("clazz", clazz);
+    // // console.log("clazz", clazz.prototype);
+    // // console.log("A", DepInjCopy);
+    // // console.log("B", DepInjCopy.prototype);
+    // // const copy = new DepInjCopy();
+    // // console.log(copy.foo, copy.bar, copy.fooBar(), copy.isInstantiated);
+    // // copy.destruct();
+    // // console.log(copy.foo, copy.bar, copy.fooBar(), copy.isInstantiated);
+    //
+    // dep.clazz = DepInjCopy;
+    // dep.destructor = () => {
+    //     if (dep.instance) {
+    //         origDestruct.call(dep.instance);
+    //         dep.instance = null;
+    //         dep.count = 0;
+    //     }
+    // };
+    //
+    // DI_MAP.push([classId, modPath, dep]);
+    // // console.log(DI_MAP);
 }
 
 /**
@@ -101,8 +120,8 @@ export function unregister (clazz: any, module = "global", withDestruct = true):
         // console.log("REMOVE =>", DI_MAP.indexOf(di));
         DI_MAP.splice(DI_MAP.indexOf(di), 1);
         // Cleanup the removed Class.
-        if (withDestruct) {
-            di[2].destructor();
+        if (withDestruct && di[2].instance) {
+            di[2].instance.destruct();
         }
     });
 }

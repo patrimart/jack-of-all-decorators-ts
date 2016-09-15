@@ -5,21 +5,22 @@
  */
 export const DI_CLASS_ID = Symbol("di-class-id");
 
-export type DIMap = [string, string[], IDependency];
+/**
+ * DepMap type.
+ * [ DI_CLASS_ID: string, [module: string], IDependency ]
+ */
+export type DepMap = [string, string[], IDependency];
 
 /**
  * Map for DI lookup.
- * [ DI_CLASS_ID, [module namespace], DI ]
- * @type {Array}
+ * @type {DepMap[]}
  */
-export const DI_MAP: DIMap[] = [];
-
+export const DI_MAP: DepMap[] = [];
 
 /**
  * The interface for the the dependency classes.
  */
-export interface IInjectable {
-    DI_CLASS_ID?: string;
+export interface Injectable {
     destruct(): void;
 }
 
@@ -27,19 +28,20 @@ export interface IInjectable {
  * The interface for the dependency object lookup.
  */
 export interface IDependency {
-    instance: IInjectable;
+    instance: Injectable;
     clazz: any;
-    autoDestructor: boolean;
+    dependencies: any[];
     count: number;
+    selfDestruct: boolean;
     destructor(): void;
 }
 
 /**
  * Returns the IDependency for the given Class object.
- * @param clazz
- * @returns {DIMap[]}
+ * @param {*} [clazz] - the Class to filter on.
+ * @returns {DepMap[]}
  */
-export function getInjectablesByClass (clazz: any): DIMap[] {
+export function getInjectablesByClass (clazz: any): DepMap[] {
 
     if (clazz[DI_CLASS_ID] === undefined) {
         throw new ReferenceError("The given class has not been registered.");
@@ -56,26 +58,29 @@ export function getInjectablesByClass (clazz: any): DIMap[] {
 
 /**
  * Returns the IDependency objects under the given module path.
- * Sep by dot. Wildcard with *. "mod.path", "mod.path.*", "mod.*.path".
+ * Sep by dot. Wildcard with * and **. "mod.path", "mod.path.*", "mod.path.**".
  * @param {string} module - the module(s) to query.
  * @param {*} [clazz] - the optional Class to filter on.
- * @returns {DIMap[]}
+ * @returns {DepMap[]}
  */
-export function getInjectablesByModule (module: string, clazz?: any): DIMap[] {
+export function getInjectablesByModule (module: string, clazz?: any): DepMap[] {
 
     // TODO Validate module path.
 
-    if (module === "*" && clazz !== undefined) {
+    if (module === "**" && clazz !== undefined) {
         return getInjectablesByClass(clazz);
     }
 
     const modParts = module.split(".");
     const di = DI_MAP
         .filter(di => {
+            // console.log();
             // console.log(di[1].length, "=", modParts.length);
-            return di[1].length === modParts.length && di[1].every((d, i) => {
+            let lastModPart: string;
+            return di[1].length >= modParts.length && di[1].every((d, i) => {
                 // console.log(d, "= * || ", d, "=", modParts[i]);
-                return modParts[i] === "*" || d === modParts[i];
+                lastModPart = modParts[i] || lastModPart;
+                return modParts[i] === "*" || d === modParts[i] || lastModPart === "**";
             })
         })
         .filter(di => {
@@ -104,7 +109,7 @@ export function getInjectablesByModule (module: string, clazz?: any): DIMap[] {
 //             {
 //                 instance: null,
 //                 clazz: `( ${String(di[2].clazz)} )`,
-//                 autoDestructor: di[2].autoDestructor,
+//                 selfDestruct: di[2].selfDestruct,
 //                 count: 0,
 //                 destructor: `( ${String(di[2].destructor)} )`,
 //             }

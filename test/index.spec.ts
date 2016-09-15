@@ -12,3 +12,4 @@ import "./jsonables/configs.spec";
 import "./jsonables/transformers.spec";
 
 import "./dependency-injection/register.spec";
+import "./dependency-injection/inject.spec";
