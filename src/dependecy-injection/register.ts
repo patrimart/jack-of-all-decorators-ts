@@ -36,7 +36,7 @@ export function register (clazz: any, module = "global", selfDestruct = true): I
             try {
                 const regDep = getInjectablesByClass(clazz)[0][2];
                 dep.dependencies = regDep.dependencies.slice(0);
-            } catch (err2) { /* Nothing found. Go ahead and register. */ }
+            } catch (err) { /* Nothing found. Go ahead and register. */ }
         }
 
     } else {
@@ -47,60 +47,6 @@ export function register (clazz: any, module = "global", selfDestruct = true): I
     DI_MAP.push([classId, modPath, dep]);
 
     return dep;
-
-    // // Create a copy of the Class to preserve original destruct().
-    // const DepInjCopy = eval(`( ${clazz} )`);
-    // Object.getOwnPropertySymbols(clazz).forEach(s => DepInjCopy[s] = clazz[s]);
-    // DepInjCopy.prototype = Object.create(clazz.prototype);
-    // // DepInjCopy.prototype.constructor = clazz;
-    //
-    // // Assign the same unique ID to the Class copy object.
-    // // Object.defineProperty(DepInjCopy, DI_CLASS_ID as any, { value: classId });
-    // // Assign the module path to the class.
-    // Object.defineProperty(DepInjCopy, DI_CLASS_MODULE as any, { value: module });
-    //
-    // // If auto-destructor, override the original destruct() with counter and auto-destruct.
-    // const origDestruct = (DepInjCopy.prototype as any)["destruct"];
-    // if (selfDestruct) {
-    //
-    //     Object.defineProperty(DepInjCopy.prototype, "destruct", {
-    //         enumerable: true,
-    //         value: function () {
-    //
-    //             dep.count = Math.max(0, dep.count - 1);
-    //
-    //             if (dep.count === 0 && dep.instance) {
-    //                 origDestruct.call(this);
-    //                 dep.instance = null;
-    //                 return;
-    //             }
-    //         }
-    //     });
-    // }
-    //
-    // // console.log(clazz === DepInjCopy);
-    // // console.log("DI_CLASS_ID", clazz[DI_CLASS_ID]);
-    // // console.log("DI_CLASS_ID", DepInjCopy[DI_CLASS_ID]);
-    // // console.log("clazz", clazz);
-    // // console.log("clazz", clazz.prototype);
-    // // console.log("A", DepInjCopy);
-    // // console.log("B", DepInjCopy.prototype);
-    // // const copy = new DepInjCopy();
-    // // console.log(copy.foo, copy.bar, copy.fooBar(), copy.isInstantiated);
-    // // copy.destruct();
-    // // console.log(copy.foo, copy.bar, copy.fooBar(), copy.isInstantiated);
-    //
-    // dep.clazz = DepInjCopy;
-    // dep.destructor = () => {
-    //     if (dep.instance) {
-    //         origDestruct.call(dep.instance);
-    //         dep.instance = null;
-    //         dep.count = 0;
-    //     }
-    // };
-    //
-    // DI_MAP.push([classId, modPath, dep]);
-    // // console.log(DI_MAP);
 }
 
 /**
@@ -117,7 +63,6 @@ export function unregister (clazz: any, module = "global", withDestruct = true):
     // Find Class objects under given module path.
     getInjectablesByModule(module, clazz).forEach(di => {
         // Remove from DI_MAP.
-        // console.log("REMOVE =>", DI_MAP.indexOf(di));
         DI_MAP.splice(DI_MAP.indexOf(di), 1);
         // Cleanup the removed Class.
         if (withDestruct && di[2].instance) {
@@ -145,6 +90,26 @@ export function numRegistered (clazz?: any, module?: string): number {
         }
 
         return getInjectablesByModule(module, clazz).length;
+
+    } catch (err) {
+        return 0;
+    }
+}
+
+
+export function numActive (clazz?: any, module?: string): number {
+
+    try {
+
+        if (clazz === undefined && module === undefined) {
+            return DI_MAP.filter(d => !! d[2].instance).length;
+        }
+
+        if (clazz !== undefined && module === undefined) {
+            return getInjectablesByClass(clazz).filter(d => !! d[2].instance).length;
+        }
+
+        return getInjectablesByModule(module, clazz).filter(d => !! d[2].instance).length;
 
     } catch (err) {
         return 0;

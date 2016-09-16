@@ -74,18 +74,13 @@ export function getInjectablesByModule (module: string, clazz?: any): DepMap[] {
     const modParts = module.split(".");
     const di = DI_MAP
         .filter(di => {
-            // console.log();
-            // console.log(di[1].length, "=", modParts.length);
             let lastModPart: string;
             return di[1].length >= modParts.length && di[1].every((d, i) => {
-                // console.log(d, "= * || ", d, "=", modParts[i]);
                 lastModPart = modParts[i] || lastModPart;
                 return modParts[i] === "*" || d === modParts[i] || lastModPart === "**";
             })
         })
         .filter(di => {
-            // console.log(clazz);
-            // console.log(di[0], "=", clazz && clazz[DI_CLASS_ID]);
             return clazz === undefined || di[0] === clazz[DI_CLASS_ID];
         });
 

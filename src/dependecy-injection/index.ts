@@ -13,8 +13,12 @@ export namespace DI {
         export const register = Register.register;
         export const unregister = Register.unregister;
         export const numRegistered = Register.numRegistered;
+        export const numActive = Register.numActive;
+
         export const inject = Utils.inject;
         export const injectable = Utils.injectable;
+
         export const modularize = Utils.modularize;
+        export const destruct = Utils.destruct;
     }
 }

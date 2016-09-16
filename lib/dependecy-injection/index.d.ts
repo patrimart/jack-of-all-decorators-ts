@@ -7,8 +7,10 @@ export declare namespace DI {
         const register: typeof Register.register;
         const unregister: typeof Register.unregister;
         const numRegistered: typeof Register.numRegistered;
+        const numActive: typeof Register.numActive;
         const inject: typeof Utils.inject;
         const injectable: typeof Utils.injectable;
         const modularize: typeof Utils.modularize;
+        const destruct: typeof Utils.destruct;
     }
 }
