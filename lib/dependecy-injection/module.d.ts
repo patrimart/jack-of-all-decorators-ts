@@ -1,11 +1,11 @@
 export declare const DI_CLASS_ID: symbol;
 export declare type DepMap = [string, string[], IDependency];
 export declare const DI_MAP: DepMap[];
-export interface Injectable {
+export interface IInjectable {
     destruct(): void;
 }
 export interface IDependency {
-    instance: Injectable;
+    instance: IInjectable;
     clazz: any;
     dependencies: any[];
     count: number;

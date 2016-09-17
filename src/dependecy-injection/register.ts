@@ -1,14 +1,14 @@
 
 import {
     DI_CLASS_ID, DI_MAP,
-    IDependency, Injectable,
+    IDependency, IInjectable,
     getInjectablesByModule, getInjectablesByClass,
 } from "./module";
 
 
 /**
  * Register a Class as a dependency with optional module path and auto-destructor.
- * @param {Injectable & FunctionConstructor} clazz - the Class to register.
+ * @param {IInjectable & FunctionConstructor} clazz - the Class to register.
  * @param {string} [module="global"] - the module path to register the class under.
  * @param {boolean} [selfDestruct=true] - should the class' destruct() be called when no instances in use?
  */

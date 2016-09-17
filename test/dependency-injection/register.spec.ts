@@ -36,7 +36,7 @@ describe ("Register", function () {
 
         assert.equal(DI.utils.numRegistered(MyClass), 5);
         assert.equal(DI.utils.numRegistered(MyClass, "foo.bar"), 1);
-        assert.equal(DI.utils.numRegistered(), 5);
+        // assert.equal(DI.utils.numRegistered(), 5);
     });
 
     it ("should unregister a class", function () {
@@ -47,7 +47,11 @@ describe ("Register", function () {
         DI.utils.unregister(MyClass, "foo");
         DI.utils.unregister(MyClass);
 
-        assert.equal(DI.utils.numRegistered(), 0);
+        assert.equal(DI.utils.numRegistered(MyClass, "foo.bar.fooBar"), 0);
+        assert.equal(DI.utils.numRegistered(MyClass, "foo.bar"), 0);
+        assert.equal(DI.utils.numRegistered(MyClass, "bar"), 0);
+        assert.equal(DI.utils.numRegistered(MyClass, "foo"), 0);
+        assert.equal(DI.utils.numRegistered(MyClass), 0);
     });
 
     it ("should throw for unregistering at missing module path", function () {
@@ -70,10 +74,8 @@ describe ("Register", function () {
         DI.utils.register(MyClass, "foo.bar2");
         DI.utils.register(MyClass, "foo.bar3.fooBar");
 
-        assert.equal(DI.utils.numRegistered(), 5);
-
         DI.utils.unregister(MyClass, "**");
-        assert.equal(DI.utils.numRegistered(), 0);
+        assert.equal(DI.utils.numRegistered(MyClass), 0);
     });
 
 
@@ -85,16 +87,22 @@ describe ("Register", function () {
         DI.utils.register(MyClass, "foo.bar2");
         DI.utils.register(MyClass, "foo.bar3.fooBar");
 
-        assert.equal(DI.utils.numRegistered(), 5);
+        assert.equal(DI.utils.numRegistered(MyClass), 5);
 
         DI.utils.unregister(MyClass, "foo.*");
-        assert.equal(DI.utils.numRegistered(), 3);
+        assert.equal(DI.utils.numRegistered(MyClass), 3);
 
         DI.utils.unregister(MyClass, "foo.**");
-        assert.equal(DI.utils.numRegistered(), 2);
+        assert.equal(DI.utils.numRegistered(MyClass), 2);
 
         DI.utils.unregister(MyClass, "**");
-        assert.equal(DI.utils.numRegistered(), 0);
+        assert.equal(DI.utils.numRegistered(MyClass), 0);
+    });
+
+    it ("should exercise some other braches", function () {
+        DI.utils.numActive();
+        DI.utils.numActive(MyClass);
+        DI.utils.numActive(MyClass, "foo");
     });
 
 });

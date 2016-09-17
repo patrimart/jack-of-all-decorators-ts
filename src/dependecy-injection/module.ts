@@ -20,7 +20,7 @@ export const DI_MAP: DepMap[] = [];
 /**
  * The interface for the the dependency classes.
  */
-export interface Injectable {
+export interface IInjectable {
     destruct(): void;
 }
 
@@ -28,7 +28,7 @@ export interface Injectable {
  * The interface for the dependency object lookup.
  */
 export interface IDependency {
-    instance: Injectable;
+    instance: IInjectable;
     clazz: any;
     dependencies: any[];
     count: number;

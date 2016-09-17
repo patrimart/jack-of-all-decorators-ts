@@ -3,8 +3,10 @@
 import assert = require("assert");
 
 import { DI } from "../../lib/dependecy-injection";
+import Injectable = DI.Injectable;
+import Inject = DI.Inject;
 
-
+@Injectable()
 class Foo implements DI.IInjectable {
 
     public guid = Math.random().toString(36).substr(2);
@@ -21,7 +23,9 @@ class Foo implements DI.IInjectable {
 }
 
 class MyClass implements DI.IInjectable {
-    constructor (public foo: Foo) {
+    constructor (
+        @Inject(Foo) public foo: Foo
+    ) {
         // console.log("MyClass constructor");
     }
     public destruct () {
@@ -31,7 +35,9 @@ class MyClass implements DI.IInjectable {
 }
 
 class MyClass2 implements DI.IInjectable {
-    constructor (public foo: Foo) {
+    constructor (
+        @Inject(Foo) public foo: Foo
+    ) {
         // console.log("MyClass2 destruct()");
     }
     public destruct () {
@@ -50,8 +56,8 @@ describe ("Inject", function () {
 
         it("injectables", function () {
 
-            DI.utils.injectable(Foo);
-            DI.utils.inject(MyClass, Foo, 0);
+            // DI.utils.injectable(Foo);
+            // DI.utils.inject(MyClass, Foo, 0);
             c1 = DI.Modularize<MyClass>(MyClass);
 
             // console.log("c1.foo.guid", c1.foo.guid);
@@ -62,8 +68,8 @@ describe ("Inject", function () {
 
         it("injectables scoped to modules", function () {
 
-            DI.utils.injectable(Foo);
-            DI.utils.inject(MyClass2, Foo, 0);
+            // DI.utils.injectable(Foo);
+            // DI.utils.inject(MyClass2, Foo, 0);
             c2 = DI.Modularize<MyClass2>(MyClass2, "foo.bar");
 
             // console.log("c2.foo.guid", c2.foo.guid);
@@ -75,6 +81,12 @@ describe ("Inject", function () {
     it("destruct modules", function () {
 
         // console.log("numRegistered numActive", DI.utils.numRegistered(), DI.utils.numActive());
+
+        c1.foo.destruct();
+        c2.foo.destruct();
+        c1.destruct();
+        c2.destruct();
+
         DI.Destruct();
         DI.Destruct("foo.bar");
         assert.equal(c1.foo, null);

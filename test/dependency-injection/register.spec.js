@@ -27,7 +27,6 @@ describe("Register", function () {
         dependecy_injection_1.DI.utils.register(MyClass, "foo.bar.fooBar");
         assert.equal(dependecy_injection_1.DI.utils.numRegistered(MyClass), 5);
         assert.equal(dependecy_injection_1.DI.utils.numRegistered(MyClass, "foo.bar"), 1);
-        assert.equal(dependecy_injection_1.DI.utils.numRegistered(), 5);
     });
     it("should unregister a class", function () {
         dependecy_injection_1.DI.utils.unregister(MyClass, "foo.bar.fooBar");
@@ -35,7 +34,11 @@ describe("Register", function () {
         dependecy_injection_1.DI.utils.unregister(MyClass, "bar");
         dependecy_injection_1.DI.utils.unregister(MyClass, "foo");
         dependecy_injection_1.DI.utils.unregister(MyClass);
-        assert.equal(dependecy_injection_1.DI.utils.numRegistered(), 0);
+        assert.equal(dependecy_injection_1.DI.utils.numRegistered(MyClass, "foo.bar.fooBar"), 0);
+        assert.equal(dependecy_injection_1.DI.utils.numRegistered(MyClass, "foo.bar"), 0);
+        assert.equal(dependecy_injection_1.DI.utils.numRegistered(MyClass, "bar"), 0);
+        assert.equal(dependecy_injection_1.DI.utils.numRegistered(MyClass, "foo"), 0);
+        assert.equal(dependecy_injection_1.DI.utils.numRegistered(MyClass), 0);
     });
     it("should throw for unregistering at missing module path", function () {
         assert.throws(function () { return dependecy_injection_1.DI.utils.unregister(MyClass); });
@@ -52,9 +55,8 @@ describe("Register", function () {
         dependecy_injection_1.DI.utils.register(MyClass, "foo.bar1");
         dependecy_injection_1.DI.utils.register(MyClass, "foo.bar2");
         dependecy_injection_1.DI.utils.register(MyClass, "foo.bar3.fooBar");
-        assert.equal(dependecy_injection_1.DI.utils.numRegistered(), 5);
         dependecy_injection_1.DI.utils.unregister(MyClass, "**");
-        assert.equal(dependecy_injection_1.DI.utils.numRegistered(), 0);
+        assert.equal(dependecy_injection_1.DI.utils.numRegistered(MyClass), 0);
     });
     it("should unregister dependencies by wildcard and/or Class", function () {
         dependecy_injection_1.DI.utils.register(MyClass);
@@ -62,12 +64,17 @@ describe("Register", function () {
         dependecy_injection_1.DI.utils.register(MyClass, "foo.bar1");
         dependecy_injection_1.DI.utils.register(MyClass, "foo.bar2");
         dependecy_injection_1.DI.utils.register(MyClass, "foo.bar3.fooBar");
-        assert.equal(dependecy_injection_1.DI.utils.numRegistered(), 5);
+        assert.equal(dependecy_injection_1.DI.utils.numRegistered(MyClass), 5);
         dependecy_injection_1.DI.utils.unregister(MyClass, "foo.*");
-        assert.equal(dependecy_injection_1.DI.utils.numRegistered(), 3);
+        assert.equal(dependecy_injection_1.DI.utils.numRegistered(MyClass), 3);
         dependecy_injection_1.DI.utils.unregister(MyClass, "foo.**");
-        assert.equal(dependecy_injection_1.DI.utils.numRegistered(), 2);
+        assert.equal(dependecy_injection_1.DI.utils.numRegistered(MyClass), 2);
         dependecy_injection_1.DI.utils.unregister(MyClass, "**");
-        assert.equal(dependecy_injection_1.DI.utils.numRegistered(), 0);
+        assert.equal(dependecy_injection_1.DI.utils.numRegistered(MyClass), 0);
+    });
+    it("should exercise some other braches", function () {
+        dependecy_injection_1.DI.utils.numActive();
+        dependecy_injection_1.DI.utils.numActive(MyClass);
+        dependecy_injection_1.DI.utils.numActive(MyClass, "foo");
     });
 });

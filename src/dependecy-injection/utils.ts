@@ -1,6 +1,9 @@
 
-import { IDependency, getInjectablesByModule } from "./module";
-import { register }    from "./register";
+import {
+    IDependency,
+    getInjectablesByModule
+} from "./module";
+import { register } from "./register";
 
 
 export function modularize <T> (clazz: any, module = "global"): T {
