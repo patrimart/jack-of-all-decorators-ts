@@ -8,6 +8,7 @@
 Is a **TypeScript** library that contains may useful class decorators to help remove some of the tiresome boiler-plate from TypeScript/JavaScript development.
 - **Jsonables** adds JSON Serialization/Deserialization to classes.
 - **Decorators** wraps class members with convenient transformers, like **lodash** functions and others.
+- **Dependency Injection** handles instantiation/destruction of class dependencies at the global and/or module level.
 
 
 ## Installation
@@ -63,6 +64,7 @@ assert.equals(myClass.getBar(), myNewClass.getBar());
 
 Note: **Jsonables** offers highly customizable JSON serialization options beyond the basic example above. Explore the docs to learn more.
 
+
 ### Decorators - Wrap Class Members with Useful Transformers
 
 The **Decorators** module provides many decorators to augment the input and output of class members. Most deocrators use the amazing **lodash** library. A few others provide features beyond what **lodash** offers.
@@ -97,6 +99,40 @@ class MyClass {
         return new Date();
     }
 }
+```
+
+
+### Dependency Injection - Handle Class Dependencies
+
+
+The **Dependency Injection** module provides an easy way to manage class dependencies. Dependencies are instantiated as Singletons that are sandboxed to the global or given module namespace.
+
+**Example Dependency Injection Usage:**
+```ts
+@Injectable()
+class Foo implements IInjectable {
+
+    public guid = Math.random().toString(36).substr(2);
+
+    public destruct(): void {
+        this.guid = null;
+    }
+}
+
+class MyClass implements IInjectable {
+
+    constructor (
+        @Inject(Foo) public foo: Foo
+    ) {}
+
+    public destruct () {
+        this.foo = null;
+    }
+}
+
+const myClass = DI.Modularize<MyClass>(MyClass, "module.path");
+console.log(myClass.foo);
+DI.Destruct("module.path");
 ```
 
 
