@@ -18,15 +18,15 @@ Install via `npm`:
 `npm install jack-of-all-decorators`
 
 
-### Documentation Wiki
+## Documentation Wiki
 
 View the docs at the [GitHub Wiki](https://github.com/patrimart/jack-of-all-decorators-ts/wiki).
 
 
 ---
-## Brief Intro to the Library...
+### Brief Intro to the Library...
 
-### Jsonables - JSON Serialization/Deserialization of Classes.
+## Jsonables - JSON Serialization/Deserialization of Classes.
 Jsonable decorators make classes JSON serializable by adding the `toJSON()` method.
 
 **Example Class with Basic JSON Serialization:**
@@ -65,7 +65,7 @@ assert.equals(myClass.getBar(), myNewClass.getBar());
 Note: **Jsonables** offers highly customizable JSON serialization options beyond the basic example above. Explore the docs to learn more.
 
 
-### Decorators - Wrap Class Members with Useful Transformers
+## Decorators - Wrap Class Members with Useful Transformers
 
 The **Decorators** module provides many decorators to augment the input and output of class members. Most deocrators use the amazing **lodash** library. A few others provide features beyond what **lodash** offers.
 
@@ -101,28 +101,27 @@ class MyClass {
 }
 ```
 
-
-### Dependency Injection - Handle Class Dependencies
-
+## Dependency Injection - Handle Class Dependencies
 
 The **Dependency Injection** module provides an easy way to manage class dependencies. Dependencies are instantiated as Singletons that are sandboxed to the global or given module namespace.
 
 **Example Dependency Injection Usage:**
 ```ts
-@Injectable()
-class Foo implements IInjectable {
+@DI.Injectable()
+class Foo implements DI.IInjectable {
 
     public guid = Math.random().toString(36).substr(2);
 
-    public destruct(): void {
+    public destruct() {
         this.guid = null;
     }
 }
 
-class MyClass implements IInjectable {
+@DI.Injectable()
+class MyClass implements DI.IInjectable {
 
     constructor (
-        @Inject(Foo) public foo: Foo
+        @DI.Inject(Foo) public foo: Foo
     ) {}
 
     public destruct () {
@@ -131,7 +130,7 @@ class MyClass implements IInjectable {
 }
 
 const myClass = DI.Modularize<MyClass>(MyClass, "module.path");
-console.log(myClass.foo);
+console.log(myClass.foo.guid);
 DI.Destruct("module.path");
 ```
 
